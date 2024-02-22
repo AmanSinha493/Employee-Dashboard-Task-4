@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employees</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="add-employee.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="main-body grid" id="main-body">
+        <div class="side-bar flex-column" id="side-bar">
+            <div class="tezo-logo">
+                <img src="/images/TezoLogo.png" alt="Tezo-logo">
+            </div>
+            <div class="logo-icon">
+                <img src="/images/tezo Icon.png" alt="Tezos Logo">
+            </div>
+
+            <div class="all">
+                <div class="light-grey function-name">ALL</div>
+                <div class="dasboard grid side-bar-options">
+                    <div class="lock-icon"><img src="/images/Horizontal nav/Dashboard.svg" alt="lock-icon"></div>
+                    <div class="text grey-color">Dasboard</div>
+
+                </div>
+
+                <div class="employees flex-column selected">
+                    <a href="/">
+                        
+                    
+                    <div class="employees-bar grid side-bar-options selected">
+                        <div class="lock-icon"><img src="/images/Horizontal nav/Employees.svg" alt="lock-icon"></div>
+                        <div class="text">Employees</div>
+
+                        <div class="selected-mark"></div>
+                    </div>
+                </a>
+                    <div id="employees-sub-options">
+                        <div class="employees-sub-options">
+                            <div class="grey-color">
+                                <div><i class="fa-solid fa-circle"></i></div>All
+                            </div>
+                            <div class="grey-color">
+                                <div><i class="fa-solid fa-circle "></i></div>Active
+                            </div>
+                            <div class="grey-color">
+                                <div class="grey-color"><i class="fa-solid fa-circle"></i></div>In Active
+                            </div>
+                        </div>
+
+                        <div class="departments">
+                            <div class="light-grey function-name">Departments</div>
+                            <div class="departments-sub-options">
+                                <div class="grey-color">
+                                    <div><i class="fa-solid fa-circle"></i></div>
+                                    <div>IT</div>
+                                    <div class="selected-column-number">
+                                        <p>3</p>
+                                    </div>
+                                </div>
+
+                                <div class="grey-color selected">
+                                    <div><i class="fa-solid fa-circle"></i></div>
+                                    <div>UI/UX</div>
+                                    <div class="selected-column-number">
+                                        <p>3</p>
+                                    </div>
+                                </div>
+
+                                <div class="grey-color">
+                                    <div><i class="fa-solid fa-circle"></i></div>
+                                    <div>PE</div>
+                                    <div class="selected-column-number">
+                                        <p>2</p>
+                                    </div>
+                                </div>
+
+                                <div class="grey-color">
+                                    <div><i class="fa-solid fa-circle"></i></div>
+
+                                    <p>Human Resources</p>
+                                    <div class="selected-column-number">
+                                        <p>24</p>
+                                    </div>
+                                </div>
+
+                                <div class="grey-color">
+                                    <div><i class="fa-solid fa-circle"></i></div>
+                                    <div>Sales</div>
+                                    <div class="selected-column-number">
+                                        <p>12</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="light-grey function-name">Roles/ User Management</div>
+
+
+                <a href="http://127.0.0.1:5500/Roles/Roles.html">
+                    <div class="user-management__roles grid side-bar-options">
+                        <div class="lock-icon"><img src="/images/Horizontal nav/Roles.svg" alt="lock-icon"></div>
+                        <div class="text grey-color">Roles</div>
+                        <div class="arrow flex"><i class="fa-solid fa-angle-right"></i></div>
+
+                    </div>
+                </a>
+
+                <div class="user-management__assign grid side-bar-options">
+                    <div class="lock-icon assign-roles-img"><img src="/images/Horizontal nav/assign user.svg"
+                            alt="lock-icon"></div>
+                    <div class="text grey-color assign-roles">Assign User Roles</div>
+                    <div class="arrow flex"><i class="fa-solid fa-angle-right"></i></div>
+                </div>
+            </div>
+
+            <div class="install-update flex-column">
+                <div class="update-text">Install new update 2.3.1A</div>
+                <div class="update-desc light-grey">Allow to launch the new update for the AD application</div>
+                <div class="update-options flex">
+                    <div class="dismiss-button flex">Dismiss</div>
+                    <div class="accept-button flex">Accept</div>
+                </div>
+            </div>
+        </div>
+        <div class="employees-detail flex-column">
+            <img src="/images/handle.png" alt="" class="collapse-btn collapse-button" onclick="collapseSection()">
+            <div class="search-bar flex">
+                <div class="flex">
+                    <img src="/images/bx-search.png" alt="search" class="search-icon">
+                    <div class="search-input"><input type="text" name="search" placeholder="Search" /></div>
+                </div>
+
+                <div class="search-bar-name-block search-bar-name-block-employee flex">
+                    <div class="language-icon search-bar-icon"><img src="/images/IconButton.png" alt="language-icon">
+                    </div>
+                    <div class="block-icon search-bar-icon"><img src="/images/icon1.png" alt="language-icon"></div>
+                    <div class="theme-icon search-bar-icon"><img src="/images/icon2.png" alt="language-icon"></div>
+                    <div class="notification-icon search-bar-icon"><img src="/images/icon3.png" alt="language-icon">
+                    </div>
+                    <div class="admin flex">
+                        <div class="admin-img"><img src="/images/admin-search.png" alt="admin"></div>
+                        <div>
+                            <div class="admin__name">John Abraham</div>
+                            <div class="admin__profile"><b>Admin</b></div>
+                        </div>
+                        <div class="arrow flex"><i class="fa-solid fa-angle-down"></i></div>
+
+                    </div>
+
+                </div>
+                <img src="/images/handle.png" alt="" class="collapse-btn collapse-up-button " id="collapse-up-button"
+                    onclick="collapseDropdownTopbar()">
+            </div>
+
+            <div class="add-employee-container">
+                <h1>Add Employee</h1>
+                <form id="employeeForm" class="employee-form flex-column">
+                    <div class="profile-image-container flex" id="profileImageContainer">
+                        <label for="profileImageInput">
+                            <div class="default-profile-photo flex">
+                                <img src="/images/add-employee-default-user.svg" alt="Default User Image" id="profileImagePreview" />
+                            </div>
+                        </label>
+                       
+                        <button id="addProfilePhotoButton" class="upload-profile-pic-btn">  <input type="file" id="profileImageInput" name="profileImage" accept="image/*" />Upload Profile Picture</button>
+                    </div>
+                    <div class="employee-detail-form">
+                        <div class="employee-form-profile-details flex-column">
+                            <div class="personal-information-container">
+                                <h2>Personal Information</h2>
+                                <div class="personal-information">
+                                    <div class="flex">
+                                        <div class="input-field-container">
+                                            <label for="empNo">Emp No</label>
+                                            <input type="text" id="empNo" name="empNo" placeholder="Text" />
+                                        </div>
+                                    </div>
+    
+                                    <div class="flex">
+                                        <div class="input-field-container">
+                                            <label for="firstName">First Name</label>
+                                            <input required type="text" id="firstName" name="firstName"
+                                                placeholder="Text" />
+                                        </div>
+                                        <div class="input-field-container">
+                                            <label for="lastName">Last Name</label>
+                                            <input required type="text" id="lastName" name="lastName" placeholder="Text" />
+                                        </div>
+                                        <div class="input-field-container">
+                                            <label for="dob">Date of Birth</label>
+                                            <input type="date" id="dob" name="dob" class="date-input"
+                                                placeholder="Select" />
+                                        </div>
+                                    </div>
+                                    <div class="flex">
+                                        <div class="input-field-container">
+                                            <label for="email">Email Id</label>
+                                            <input required type="email" id="email" name="email"
+                                                placeholder="Joe.j@Technover.com" />
+                                        </div>
+                                        <div class="input-field-container">
+                                            <label for="mobileNumber">Mobile Number</label>
+                                            <input type="number" id="mobileNumber" name="mobileNumber"
+                                                placeholder="0000000000" />
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                
+                            </div>
+                            <div class="employment-information-container">
+                                <h2>Employment Information</h2>
+                                <div class="employment-information">
+                                    <div class="flex">
+                                        <div class="input-field-container">
+                                            <label for="joiningDate"> Joining Date</label>
+                                            <input required type="date" id="joiningDate" name="joiningDate" />
+                                        </div>
+                                        <div class="input-field-container">
+                                            <label for="location">Location</label>
+                                            <select id="location" name="location">
+                                                <option value="">Search</option>
+                                                <option value="Hyderabad">Hyderabad</option>
+                                                <option value="Bangalore">Bangalore</option>
+                                                <option value="Mumbai">Mumbai</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="flex">
+                                        <div class="input-field-container">
+                                            <label for="jobTitle">Job Title</label>
+                                            <select id="jobTitle" name="jobTitle">
+                                                <option value="">Search</option>
+                                                <option value="UXDesigner">UX Designer</option>
+                                                <option value="Front End Developer">Front End Developer</option>
+                                                <option value="Back End Developer">Back End Developer</option>
+                                                <option value="Full Stack Developer">Full Stack Developer</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-field-container">
+                                            <label for="department">Department</label>
+                                            <select id="department" name="department">
+                                                <option value="">Search</option>
+                                                <option value="UI/UX">UI/UX</option>
+                                                <option value="Human Resources">Human Resources</option>
+                                                <option value="Marketing">Marketing</option>
+                                                <option value="IT">IT</option>
+                                                <option value="Management">Management</option>
+                                                <option value="Finance">Finance</option>
+                                            </select>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="form-buttons">
+                                    <button type="cancel" >Cancel</button>
+                                    <button type="submit" id="submitButton">Add Employee</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</body>
+<script src="/script.js"></script>
+<script src="addEmployee.js"></script>
+
+</html>

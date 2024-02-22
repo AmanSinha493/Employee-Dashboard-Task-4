@@ -1,0 +1,153 @@
+#employees-sub-options{
+    display: none;
+}
+/* body{
+    min-height: 120vh;
+} */
+
+.selected {
+    color: #f44848;
+    background-color: #fde6e6;
+    border-radius: .3rem;
+}
+.user-management__roles{
+    position: relative;
+}
+.selected-mark {
+    width: 2%;
+    border-radius: .5rem;
+    position: absolute;
+    height: 100%;
+    right: -5%;
+    background-color: #f44848;
+}
+
+
+.employees-bar{
+    background-color: white;
+}
+
+.user-management-sub-options .selected>:nth-child(2){
+    color: #f44848;
+
+}
+
+.heading-text{
+    height: 100%;
+    justify-content: space-evenly;
+}
+.heading-text div{
+    font-size: 80%;
+}
+.employee-heading{
+    font-size: 85%;
+    font-weight: 550;
+    opacity: 0.8;
+}
+.add-employee-button{
+    /* color: white; */
+    /* background-color: #f44848; */
+    height: 2rem;
+    border: none;
+}
+.role-desc{
+    margin-bottom: 2vh;
+}
+
+.role-desc__title{
+    margin-bottom: .8%;
+    font-weight: 550;
+    font-size: .8rem;
+}
+.role-desc__desc{
+    font-size: .7rem;
+    line-height: 130%;
+}
+
+.employee-block-container,.role-block-container{
+    overflow-y: auto;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 1% 1% 0 1%;
+    gap:1%;
+   
+}
+.employee-block,.role-block{
+    padding: 10% 7% 5% 10%;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    border-radius: .4rem;
+    gap: .6rem;
+    margin-bottom: 3%;
+}
+.employee-profile>:first-child{
+    margin-right: 3%;
+}
+.employee-profile>:first-child img{
+    /* border: 2px solid red; */
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+}
+.employee-info-container,.role-info{
+    gap: .1rem;
+}
+.employee-department{
+    font-size: .7rem;
+    font-weight: 450;
+}
+.employee-name{
+    font-size: .8rem;
+    font-weight: 450;
+    opacity: 0.8;
+}
+
+.fa-arrow-right-long{
+    margin-left: 3%;
+}
+.employee-info,.role-info{
+    align-items: center;
+}
+.employee-info>:first-child{
+    padding-right: 5%;
+}
+.employee-info>:last-child,.view-btn{
+    font-weight: 420;
+    opacity: 0.9;
+    color: #4c5f71;
+    font-size: .75rem;
+}
+.view-btn{
+    cursor: pointer;
+    justify-content: flex-end;
+    align-items: center;
+    margin-left: auto;
+}
+
+@media (max-width : 1080px){
+
+    .employee-block-container,.role-block-container{
+        overflow-y: auto;
+        grid-template-columns: 1fr 1fr;
+        padding: 1% 1% 0 1%;
+        gap:1%;
+        
+    }
+    .employee-info>:last-child,.view-btn{
+        font-size: .9rem;
+    }
+  
+}
+
+@media (max-width : 720px){
+    .employee-block-container,.role-block-container{
+        overflow-y: scroll;
+        grid-template-columns: 1fr;
+        padding: 1% 1% 0 1%;
+        gap:1%;
+    }
+    .role-desc__desc{
+        font-size: .8rem;
+    }
+    .add-employee p{
+        font-size:.2rem;
+    }
+}

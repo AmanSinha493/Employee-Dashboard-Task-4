@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Role Detail</title>
+    <link rel="stylesheet" href="../css/style.">
+    <link rel="stylesheet" href="../css/role-detail.css">
+    <link rel="stylesheet" href="../css/roles.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="main-body grid" id="main-body">
+        <div class="side-bar flex-column" id="side-bar">
+            <div class="tezo-logo">
+                <img src="../../assets/TezoLogo.png" alt="Tezo-logo">
+            </div>
+            <div class="logo-icon">
+                <img src="../../assets/tezo Icon.png" alt="Tezos Logo">
+            </div>
+
+            <div class="all">
+                <div class="light-grey function-name">ALL</div>
+                <div class="dasboard grid side-bar-options">
+                    <div class="lock-icon"><img src="../../assets/Horizontal nav/Dashboard.svg" alt="lock-icon"></div>
+                    <div class="text grey-color">Dasboard</div>
+                    <!-- <div class="selected-mark"></div> -->
+                    <!-- <div class="arrow flex"><i class="fa-solid fa-angle-right"></i></div> -->
+                </div>
+                <!-- <div class="roles grid">
+                    <div class="lock-icon"><img src="../../assets/bx-lock.png" alt="lock-icon"></div>
+                    <div class="text grey-color">Roles</div>
+                    <div class="arrow flex"><i class="fa-solid fa-angle-right"></i></div>
+                </div> -->
+                <div class="employees flex-column">
+                    <a href="../index.html">
+                        <div class="employees-bar side-bar-options grid">
+                            <div class="lock-icon"><img src="../../assets/team_svgrepo.com.svg" alt="lock-icon"></div>
+                            <div class="text">Employees</div>
+                            <!-- <div class="arrow flex"><i class="fa-solid fa-angle-right collapse-btn"
+                                    onclick="collapseEmployee()"></i></div> -->
+                            <!-- <div class="employee-selected-mark"></div> -->
+                        </div>
+                    </a>
+                    <div id="employees-sub-options">
+                        <div class="employees-sub-options">
+                            <div class="grey-color">
+                                <div><i class="fa-solid fa-circle"></i></div>All
+                            </div>
+                            <div class="grey-color">
+                                <div><i class="fa-solid fa-circle "></i></div>Active
+                            </div>
+                            <div class="grey-color">
+                                <div class="grey-color"><i class="fa-solid fa-circle"></i></div>In Active
+                            </div>
+                        </div>
+
+                        <div class="departments">
+                            <div class="light-grey function-name">Departments</div>
+                            <div class="departments-sub-options">
+                                <div class="grey-color">
+                                    <div><i class="fa-solid fa-circle"></i></div>
+                                    <div>IT</div>
+                                    <div class="selected-column-number">
+                                        <p>3</p>
+                                    </div>
+                                </div>
+
+                                <div class="grey-color selected">
+                                    <div><i class="fa-solid fa-circle"></i></div>
+                                    <div>UI/UX</div>
+                                    <div class="selected-column-number">
+                                        <p>3</p>
+                                    </div>
+                                </div>
+
+                                <div class="grey-color">
+                                    <div><i class="fa-solid fa-circle"></i></div>
+                                    <div>PE</div>
+                                    <div class="selected-column-number">
+                                        <p>2</p>
+                                    </div>
+                                </div>
+
+                                <div class="grey-color">
+                                    <div><i class="fa-solid fa-circle"></i></div>
+                                    <!-- <div>HumanResources</div> -->
+                                    <p>Human Resources</p>
+                                    <div class="selected-column-number">
+                                        <p>24</p>
+                                    </div>
+                                </div>
+
+                                <div class="grey-color">
+                                    <div><i class="fa-solid fa-circle"></i></div>
+                                    <div>Sales</div>
+                                    <div class="selected-column-number">
+                                        <p>12</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- <div class="user-management"> -->
+                <div class="light-grey function-name">Roles/ User Management</div>
+                <!-- <div class="user-management-sub-options"> -->
+
+                        <div class="user-management__roles grid side-bar-options selected">
+                            <div class="lock-icon"><img src="../../assets/Horizontal nav/selected role.svg" alt="lock-icon"></div>
+                            <div class="text">Roles</div>
+                            <div class="arrow flex"><i class="fa-solid fa-angle-right"></i></div>
+                            <div class="selected-mark"></div>
+                        </div>
+
+                    <div class="user-management__assign grid side-bar-options">
+                        <!-- <div class="lock-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M4 22a8 8 0 1 1 16 0h-2a6 6 0 0 0-12 0zm8-9c-3.315 0-6-2.685-6-6s2.685-6 6-6s6 2.685 6 6s-2.685 6-6 6m0-2c2.21 0 4-1.79 4-4s-1.79-4-4-4s-4 1.79-4 4s1.79 4 4 4"/></svg></div> -->
+                        <div class="lock-icon assign-roles-img"><img src="../../assets/Horizontal nav/assign user.svg"
+                                alt="lock-icon"></div>
+                        <div class="text grey-color assign-roles">Assign User Roles</div>
+                        <div class="arrow flex"><i class="fa-solid fa-angle-right"></i></div>
+                        <!-- <div class="employee-selected-mark"></div> -->
+                    <!-- </div> -->
+                </div>
+            </div>
+
+            <div class="install-update flex-column">
+                <div class="update-text">Install new update 2.3.1A</div>
+                <div class="update-desc light-grey">Allow to launch the new update for the AD application</div>
+                <div class="update-options flex">
+                    <div class="dismiss-button flex">Dismiss</div>
+                    <div class="accept-button flex">Accept</div>
+                </div>
+            </div>
+        </div>
+        <div class="employees-detail flex-column">
+            <!-- <button class="collapse-button"><img src="../../assets/handle.png" alt=""></button> -->
+            <img src="../../assets/handle.png" alt="" class="collapse-btn collapse-button" onclick="collapseSection()">
+
+            <div class="search-bar flex">
+                <div class="flex">
+                    <img src="../../assets/bx-search.png" alt="search" class="search-icon">
+                    <div class="search-input"><input type="text" placeholder="Search" /></div>
+                </div>
+
+                <div class="search-bar-name-block flex">
+                    <div class="language-icon search-bar-icon"><img src="../../assets/IconButton.png" alt="language-icon">
+                    </div>
+                    <div class="block-icon search-bar-icon"><img src="../../assets/icon1.png" alt="language-icon"></div>
+                    <div class="theme-icon search-bar-icon"><img src="../../assets/icon2.png" alt="language-icon"></div>
+                    <div class="notification-icon search-bar-icon"><img src="../../assets/icon3.png" alt="language-icon">
+                    </div>
+                    <div class="admin flex">
+                        <div class="admin-img"><img src="../../assets/admin-search.png" alt="admin"></div>
+                        <div>
+                            <div class="admin__name">John Abraham</div>
+                            <div class="admin__profile"><b>Admin</b></div>
+                        </div>
+                        <div class="arrow flex"><i class="fa-solid fa-angle-down"></i></div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="heading-role flex">
+                <div class="heading-text flex-column">
+                    <div class="employee-heading dark-grey">Roles</div>
+                    <div class="heading-desc grey-color">All roles are configured here
+                        associate roles</div>
+                </div>
+                <a href="add%20Role/add-role.html" class="add-role-button flex">
+                    <button class="flex">
+                        <i class="fa-solid fa-plus"></i>
+                        <p class="grey-color">ADD ROLE</p>
+                    </button>
+                </a>
+            </div>
+
+            <div class="filter-bar  flex">
+                <div class="flex filter-options-container">
+                    <div>Filter</div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                        <path fill="#f44848" d="M10 18v-2h4v2zm-4-5v-2h12v2zM3 8V6h18v2z" />
+                    </svg>
+
+                    <select class="location-filter filter-options dark-grey">
+                        <option value="" hidden>Location</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Bangalore">Banglore</option>
+                        <option value="Mumbai">Mumbai</option>
+                    </select>
+                    <select class="department-filter filter-options dark-grey">
+                        <option value="" hidden>Department</option>
+                        <option value="Productengg">Product Engg</option>
+                        <option value="QA">QA</option>
+                    </select>
+                </div>
+                <div class="flex filter-action">
+                    <div class="reset-btn flex" onclick="applyRoleReset()">Reset</div>
+                    <div class="apply-btn flex" onclick="applyRoleFilter()">Apply</div>
+                </div>
+            </div>
+            <div class="role-block-container grid">
+            </div>
+        </div>
+    </div>
+</body>
+<script src="/script.js"></script>
+<script src="/Roles/roles.js"></script>
+</html>
