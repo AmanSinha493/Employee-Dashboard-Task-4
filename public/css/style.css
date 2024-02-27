@@ -53,6 +53,10 @@ a {
     height: 100vh;
 }
 
+.side-bar-collapsed.hide,.side-bar.hide{
+    display: none;
+}
+
 .side-bar {
     box-shadow: 1px 0px 10px rgba(0, 0, 0, 0.057);
     overflow-x: hidden;
@@ -70,9 +74,10 @@ a {
     padding-left: 5%;
     width: 60%;
 }
-
+.logo-icon {
+    margin-bottom: 2rem;
+}
 .logo-icon img {
-    display: none;
     margin-left: .5rem;
     height: 4rem;
     width: 4rem;
@@ -102,7 +107,21 @@ a {
 .lock-icon img {
     height: 50%;
 }
+.lock-icon-collapse img {
+    height: 1.7rem;
+}
 
+.employees-bar-collapse {
+    position: relative;
+    background-color: #fde6e6;
+    width: 100%;
+    justify-content: center;
+}
+
+.icon-container {
+    align-items: center;
+    gap: .75rem;
+}   
 .arrow {
     justify-content: center;
     align-items: center;
@@ -149,14 +168,14 @@ a {
     right: -5%;
     background-color: #f44848;
 }
-
-
-/* .side-bar-options:hover{
-    position: relative;
-    background-color: #fde6e6;
-    border-radius: .3rem;
-    color: #f44848;
-} */
+.selected-mark-collapsed{
+    width: 2%;
+    border-radius: .5rem;
+    position: absolute;
+    height: 100%;
+    right: 1%;
+    background-color: #f44848;
+}
 
 #employees-sub-options {
     display: none;
@@ -470,7 +489,7 @@ a {
 }
 
 .a-to-z-filter>:first-child.selected {
-    content: url(images/filter-icon-red.svg);
+    content: url(../../assets/filter-icon-red.svg);
 }
 
 
@@ -632,17 +651,23 @@ a {
     align-items: center;
 }
 
-.delete-btn {
+.delete-btn,.delete-btn[disabled] {
     /* outline: none; */
     border: none;
     cursor: pointer;
     margin-left: 2%;
     padding: .5% 1%;
     border-radius: .3rem;
-    background-color: #f89191;
     color: #fff;
     font-weight: 300;
     font-size: small;
+}
+.delete-btn[disabled] {
+    background-color: #f89191;
+}
+
+.delete-btn {
+    background-color: #f44848;
 }
 
 .add-list-btn {
@@ -812,155 +837,33 @@ th span {
 
 }
 
-
-@media (max-width: 1400px) {
-    html {
-        font-size: 16px;
-    }
-}
-
-
-@media (max-width: 1080px) {
-    html {
-        font-size: 16px;
-    }
-
-    .main-body {
-        grid-template-columns: 0fr 5fr;
-        overflow-x: hidden;
-    }
-
-    .collapse-button {
-        transform: rotate(180deg);
-        left: -1%;
-    }
-
-    .employees-detail {
-        padding-left: 5%;
-    }
-
-    .search-bar-name-block {
-        margin-right: 3vw;
-    }
-
-    .filter-options {
-        font-size: 0.8rem;
-    }
-
-    .filter-action {
-        width: 18%;
-    }
-
-    .reset-btn,
-    .apply-btn {
-        font-size: .7rem;
-    }
-
-    .add-employee-button,
-    .export-button {
-        height: 55%;
-    }
-
-    .col-join-dt {
-        display: none;
-    }
-
-    .col {
-        font-size: .8rem;
-    }
-
-    .list-profile-name {
-        font-size: .9rem;
-    }
-
-    .list-profile-mail {
-        font-size: .8rem;
-    }
-
-    .heading button p {
-        font-size: .6rem;
-    }
-
-    .filter-bar,
-    .a-to-z-filter {
-        display: flex;
-    }
-
-    .search-bar-name-block-employee {
-        display: flex;
-    }
-
-}
-
-
-
-
-@media (max-width: 768px) {
-
-    .filter-action {
-        width: 18%;
-    }
-
-    .filter-bar,
-    .a-to-z-filter {
-        display: none;
-    }
-
-    .search-bar-name-block-employee {
-        display: none;
-    }
-
-    .collapse-up-button {
-        display: inline-block;
-        margin-right: 1em;
-    }
-
-    .col-role,
-    .col-location {
-        display: none;
-    }
-
-    .check-box-col,
-    tr>:last-child {
-        text-align: center;
-        width: 10%;
-    }
-
-    thead {
-        top: 2.42rem;
-    }
-
-    .assign-roles-img {
-        height: 80%;
-    }
-}
-
 tr {
     position: relative;
     
 }
-
+.col-role{
+    /* text-align: center; */
+}
 .child {
-    padding-left: .5rem;
+    padding: .25rem .5rem .25rem .5rem;
     font-size: .8rem;
     color: black;
-    height: 1.2rem;
-    /* border: 1px solid red; */
-    border: 1px solid #fac0c0;
-    border-radius: .2rem;
+    text-align: left;
 }
 
 .ellipsis-menu {
-    /* border: 1px solid #fac0c0; */
     z-index: 2;
     border-radius: .5rem;
     position: absolute;
     right: 0%;
-    /* background-color: #fdf2f2; */
+    border: 1px solid black;
     background-color: white;
-    width: 10%;
-    /* border: 1px solid red; */
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
 
+.ellipsis-menu>:nth-child(2) {
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
 }
 
 .show-ellipsis-menu {
@@ -976,13 +879,6 @@ thead,
     z-index: 1;
 }
 
-
-
-
-
-
-
-
 .add-employee-form {
     visibility: hidden;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -994,7 +890,7 @@ thead,
     /* padding-left: 3%; */
     padding: 0% 3%;
     position: absolute;
-    top: 5%;
+    top: 1.5%;
     left: 10%;
     transition: transform 0.4s, top 0.4s;
     /* transition: all .5s ease-in-out; */
@@ -1200,4 +1096,123 @@ label {
     height: 1.5rem;
     width: 5rem;
     border-radius: .3rem;
+}
+
+@media (max-width: 1400px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+
+@media (max-width: 1080px) {
+    html {
+        font-size: 16px;
+    }
+
+    .main-body {
+        grid-template-columns: 0fr 5fr;
+        overflow-x: hidden;
+    }
+
+    .collapse-button {
+        transform: rotate(180deg);
+        left: -1%;
+    }
+
+    .employees-detail {
+        padding-left: 5%;
+    }
+
+    .search-bar-name-block {
+        margin-right: 3vw;
+    }
+
+    .filter-options {
+        font-size: 0.8rem;
+    }
+
+    .filter-action {
+        width: 18%;
+    }
+
+    .reset-btn,
+    .apply-btn {
+        font-size: .7rem;
+    }
+
+    .add-employee-button,
+    .export-button {
+        height: 55%;
+    }
+
+    .col-join-dt {
+        display: none;
+    }
+
+    .col {
+        font-size: .8rem;
+    }
+
+    .list-profile-name {
+        font-size: .9rem;
+    }
+
+    .list-profile-mail {
+        font-size: .8rem;
+    }
+
+    .heading button p {
+        font-size: .6rem;
+    }
+
+    .filter-bar,
+    .a-to-z-filter {
+        display: flex;
+    }
+
+    .search-bar-name-block-employee {
+        display: flex;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .filter-action {
+        width: 18%;
+    }
+
+    .filter-bar,
+    .a-to-z-filter {
+        display: none;
+    }
+
+    .search-bar-name-block-employee {
+        display: none;
+    }
+
+    .collapse-up-button {
+        display: inline-block;
+        margin-right: 1em;
+    }
+
+    .col-role,
+    .col-location {
+        display: none;
+    }
+
+    .check-box-col,
+    tr>:last-child {
+        text-align: center;
+        width: 10%;
+    }
+
+    thead {
+        top: 2.42rem;
+    }
+
+    .assign-roles-img {
+        height: 80%;
+    }
 }

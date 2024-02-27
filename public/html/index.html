@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employees</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -22,91 +22,29 @@
     <div class="main-body grid" id="main-body">
         <div class="side-bar flex-column" id="side-bar">
             <div class="tezo-logo">
-                <img src="../assets/TezoLogo.png" alt="Tezo-logo">
-            </div>
-            <div class="logo-icon">
-                <img src="../assets/tezo Icon.png" alt="Tezos Logo">
+                <img src="../../assets/TezoLogo.png" alt="Tezo-logo">
             </div>
 
             <div class="all">
                 <div class="light-grey function-name">ALL</div>
                 <div class="dasboard grid side-bar-options">
-                    <div class="lock-icon"><img src="../assets/Horizontal nav/Dashboard.svg" alt="lock-icon"></div>
+                    <div class="lock-icon"><img src="../../assets/Horizontal nav/Dashboard.svg" alt="lock-icon"></div>
                     <div class="text grey-color">Dasboard</div>
                     <!-- <div class="selected-mark"></div> -->
                     <!-- <div class="arrow flex"><i class="fa-solid fa-angle-right"></i></div> -->
                 </div>
                 <!-- <div class="roles grid">
-                    <div class="lock-icon"><img src="../assets/bx-lock.png" alt="lock-icon"></div>
+                    <div class="lock-icon"><img src="../../assets/bx-lock.png" alt="lock-icon"></div>
                     <div class="text grey-color">Roles</div>
                     <div class="arrow flex"><i class="fa-solid fa-angle-right"></i></div>
                 </div> -->
                 <div class="employees flex-column selected">
                     <div class="employees-bar grid side-bar-options">
-                        <div class="lock-icon"><img src="../assets/Horizontal nav/Employees.svg" alt="lock-icon"></div>
+                        <div class="lock-icon"><img src="../../assets/Horizontal nav/Employees.svg" alt="lock-icon"></div>
                         <div class="text">Employees</div>
                         <!-- <div class="arrow flex"><i class="fa-solid fa-angle-right collapse-btn"
                                 onclick="collapseEmployee()"></i></div> -->
                         <div class="selected-mark"></div>
-                    </div>
-                    <div id="employees-sub-options">
-                        <div class="employees-sub-options">
-                            <div class="grey-color">
-                                <div><i class="fa-solid fa-circle"></i></div>All
-                            </div>
-                            <div class="grey-color">
-                                <div><i class="fa-solid fa-circle "></i></div>Active
-                            </div>
-                            <div class="grey-color">
-                                <div class="grey-color"><i class="fa-solid fa-circle"></i></div>In Active
-                            </div>
-                        </div>
-
-                        <div class="departments">
-                            <div class="light-grey function-name">Departments</div>
-                            <div class="departments-sub-options">
-                                <div class="grey-color">
-                                    <div><i class="fa-solid fa-circle"></i></div>
-                                    <div>IT</div>
-                                    <div class="selected-column-number">
-                                        <p>3</p>
-                                    </div>
-                                </div>
-
-                                <div class="grey-color selected">
-                                    <div><i class="fa-solid fa-circle"></i></div>
-                                    <div>UI/UX</div>
-                                    <div class="selected-column-number">
-                                        <p>3</p>
-                                    </div>
-                                </div>
-
-                                <div class="grey-color">
-                                    <div><i class="fa-solid fa-circle"></i></div>
-                                    <div>PE</div>
-                                    <div class="selected-column-number">
-                                        <p>2</p>
-                                    </div>
-                                </div>
-
-                                <div class="grey-color">
-                                    <div><i class="fa-solid fa-circle"></i></div>
-                                    <!-- <div>HumanResources</div> -->
-                                    <p>Human Resources</p>
-                                    <div class="selected-column-number">
-                                        <p>24</p>
-                                    </div>
-                                </div>
-
-                                <div class="grey-color">
-                                    <div><i class="fa-solid fa-circle"></i></div>
-                                    <div>Sales</div>
-                                    <div class="selected-column-number">
-                                        <p>12</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -117,9 +55,9 @@
                 <div class="light-grey function-name">Roles/ User Management</div>
                 <!-- <div class="user-management-sub-options"> -->
 
-                <a href="./Roles/Roles.html">
+                <a href="./Roles.html">
                     <div class="user-management__roles grid side-bar-options">
-                        <div class="lock-icon"><img src="../assets/Horizontal nav/Roles.svg" alt="lock-icon"></div>
+                        <div class="lock-icon"><img src="../../assets/Horizontal nav/Roles.svg" alt="lock-icon"></div>
                         <div class="text grey-color">Roles</div>
                         <div class="arrow flex"><i class="fa-solid fa-angle-right dark-grey"></i></div>
                         <!-- <div class="employee-selected-mark"></div> -->
@@ -128,7 +66,7 @@
 
                 <div class="user-management__assign grid side-bar-options">
                     <!-- <div class="lock-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M4 22a8 8 0 1 1 16 0h-2a6 6 0 0 0-12 0zm8-9c-3.315 0-6-2.685-6-6s2.685-6 6-6s6 2.685 6 6s-2.685 6-6 6m0-2c2.21 0 4-1.79 4-4s-1.79-4-4-4s-4 1.79-4 4s1.79 4 4 4"/></svg></div> -->
-                    <div class="lock-icon assign-roles-img"><img src="../assets/Horizontal nav/assign user.svg"
+                    <div class="lock-icon assign-roles-img"><img src="../../assets/Horizontal nav/assign user.svg"
                             alt="lock-icon"></div>
                     <div class="text grey-color assign-roles">Assign User Roles</div>
                     <div class="arrow flex"><i class="fa-solid fa-angle-right light grey"></i></div>
@@ -146,23 +84,45 @@
                 </div>
             </div>
         </div>
+        <div class="side-bar-collapsed flex-column hide">
+            <div class="logo-icon">
+                <img src="../../assets/tezo Icon.png" alt="">
+            </div>
+            <div class="icon-container flex-column">
+                <div class="lock-icon-collapse"><img src="../../assets/Horizontal nav/Dashboard.svg" alt="lock-icon"></div>
+                <div class="employees-bar-collapse flex">
+                    <div class="lock-icon-collapse"><img src="../../assets/Horizontal nav/Employees.svg" alt="lock-icon">
+                    </div>
+
+                    <div class="selected-mark-collapsed"></div>
+                </div>
+                <a href="/Roles.html">
+                    <div class="lock-icon-collapse"><img src="../../assets/Horizontal nav/Roles.svg" alt="lock-icon"></div>
+                </a>
+
+                <div class="lock-icon-collapse assign-roles-img"><img src="../../assets/Horizontal nav/assign user.svg"
+                        alt="lock-icon"></div>
+
+            </div>
+        </div>
         <div class="employees-detail flex-column">
-            <img src="../assets/handle.png" alt="" class="collapse-btn collapse-button" onclick="collapseSection()">
+            <!-- <img src="../../assets/handle.png" alt="" class="collapse-btn collapse-button" onclick="collapseSection()"> -->
+            <img src="../../assets/handle.png" alt="" class="collapse-btn collapse-button">
             <div class="search-bar flex">
                 <div class="flex">
-                    <img src="../assets/bx-search.png" alt="search" class="search-icon">
+                    <img src="../../assets/bx-search.png" alt="search" class="search-icon">
                     <div class="search-input"><input type="text" placeholder="Search" /></div>
                 </div>
 
                 <div class="search-bar-name-block search-bar-name-block-employee flex">
-                    <div class="language-icon search-bar-icon"><img src="../assets/IconButton.png" alt="language-icon">
+                    <div class="language-icon search-bar-icon"><img src="../../assets/IconButton.png" alt="language-icon">
                     </div>
-                    <div class="block-icon search-bar-icon"><img src="../assets/icon1.png" alt="language-icon"></div>
-                    <div class="theme-icon search-bar-icon"><img src="../assets/icon2.png" alt="language-icon"></div>
-                    <div class="notification-icon search-bar-icon"><img src="../assets/icon3.png" alt="language-icon">
+                    <div class="block-icon search-bar-icon"><img src="../../assets/icon1.png" alt="language-icon"></div>
+                    <div class="theme-icon search-bar-icon"><img src="../../assets/icon2.png" alt="language-icon"></div>
+                    <div class="notification-icon search-bar-icon"><img src="../../assets/icon3.png" alt="language-icon">
                     </div>
                     <div class="admin flex">
-                        <div class="admin-img"><img src="../assets/admin-search.png" alt="admin"></div>
+                        <div class="admin-img"><img src="../../assets/admin-search.png" alt="admin"></div>
                         <div>
                             <div class="admin__name">John Abraham</div>
                             <div class="admin__profile"><b>Admin</b></div>
@@ -172,7 +132,7 @@
                     </div>
 
                 </div>
-                <img src="../assets/handle.png" alt="" class="collapse-btn collapse-up-button " id="collapse-up-button"
+                <img src="../../assets/handle.png" alt="" class="collapse-btn collapse-up-button " id="collapse-up-button"
                     onclick="collapseDropdownTopbar()">
             </div>
 
@@ -193,7 +153,7 @@
                                 d="M3 4.5A1.5 1.5 0 0 1 4.5 3h15A1.5 1.5 0 0 1 21 4.5v2.086A2 2 0 0 1 20.414 8L15 13.414v7.424a1.1 1.1 0 0 1-1.592.984l-3.717-1.858A1.25 1.25 0 0 1 9 18.846v-5.432L3.586 8A2 2 0 0 1 3 6.586zM5 5v1.586l5.56 5.56a1.5 1.5 0 0 1 .44 1.061v5.175l2 1v-6.175c0-.398.158-.78.44-1.06L19 6.585V5z" />
                         </g>
                     </svg>Filter</div>
-                <div class="profile-btn  dropdown-btn"><img src="../assets/profile-setting.png" alt=""> profile</div>
+                <div class="profile-btn  dropdown-btn"><img src="../../assets/profile-setting.png" alt=""> profile</div>
 
             </div>
 
@@ -203,13 +163,13 @@
                     <div class="heading-desc grey-color">Find all of your company's employee accounts and their
                         associate roles</div>
                 </div>
-                <button class="export-button flex" onclick="tableToCSV()">
-                    <img src="../assets/Masked Icon.png" alt="Export">
+                <button class="export-button flex">
+                    <img src="../../assets/Masked Icon.png" alt="Export">
                     <p class="grey-color">EXPORT</p>
                 </button>
 
                 <!-- <a href="/add%20Employee/add-employee.html" class="add-employee-button flex"> -->
-                <a href="#" class="add-employee-button flex" onclick="openAddEmployeeModal()">
+                <a href="#" class="add-employee-button flex">
                     <button class="flex">
                         <i class="fa-solid fa-plus"></i>
                         <p class="grey-color">ADD EMPLOYEE</p>
@@ -218,7 +178,7 @@
             </div>
 
             <div class="a-to-z-filter flex">
-                <img id="filter-icon" src="../assets/filter-icon-black.svg" alt="filter">
+                <img id="filter-icon" src="../../assets/filter-icon-black.svg" alt="filter">
                 <div>A</div>
                 <div>B</div>
                 <div>C</div>
@@ -250,10 +210,10 @@
                 <div class="flex filter-options-container">
                     <div>Filter</div>
 
-                    <img src="../assets/filter-3-line red.svg" alt="filter" class="red-filter">
+                    <img src="../../assets/filter-3-line red.svg" alt="filter" class="red-filter">
 
                     <div class="flex-column " id="status-filter">
-                        <div class="filter-options dark-grey flex-column" onclick="displayStatusFilter()">Status</div>
+                        <div class="filter-options dark-grey flex-column">Status</div>
                         <div class="status-dropdown hide">
                             <div class="Active"><input type="checkbox">Active</div>
                             <div class="Inactive"><input type="checkbox">In Active</div>
@@ -261,7 +221,7 @@
                     </div>
 
                     <div class="flex-column " id="location-filter">
-                        <div class="filter-options dark-grey flex-column" onclick="displayLocationFilter()">
+                        <div class="filter-options dark-grey flex-column">
                             Location</div>
                         <div class="location-dropdown hide">
                             <div class="Hyderabad"><input type="checkbox" id="Hyderabad">Hyderabad</div>
@@ -272,7 +232,7 @@
                     </div>
 
                     <div class="flex-column" id="department-filter">
-                        <div class="filter-options dark-grey flex-column" onclick="displayDepartmentFilter()">Department
+                        <div class="filter-options dark-grey flex-column">Department
                         </div>
                         <div class="department-dropdown hide">
                             <div class="ProductEngg"><input type="checkbox">Product Engg</div>
@@ -281,24 +241,24 @@
                     </div>
                 </div>
                 <div class="flex filter-action">
-                    <div class="reset-btn flex" onclick="resetFilter()">Reset</div>
-                    <div class="apply-btn flex" onclick="applyFilter()">Apply</div>
+                    <div class="reset-btn flex" >Reset</div>
+                    <div class="apply-btn flex">Apply</div>
                 </div>
             </div>
 
             <div class="employee-list-body flex-column">
                 <div class="list-updation-bar flex">
-                    <img src="../assets/arrow-turn left -down.png" alt="arrow" div class="left-down-arrow">
+                    <img src="../../assets/arrow-turn left -down.png" alt="arrow" div class="left-down-arrow">
                     <!-- <div class="delete-btn" onclick="openDeleteConfirmation()" >Delete</div> -->
-                    <button disabled class="delete-btn" onclick="openDeleteConfirmation()">Delete</button>
-                    <img src="../assets/table-add.png" alt="add-employee" class="add-list-btn" onclick="displayEmpForm()">
+                    <button disabled class="delete-btn">Delete</button>
+                    <img src="../../assets/table-add.png" alt="add-employee" class="add-list-btn">
                 </div>
 
                 <table id="employee-table" class="employee-table">
                     <thead>
                         <th class="check-box-col">
                             <label for="">
-                                <input type="checkbox" onclick="selectAllRow()" />
+                                <input type="checkbox"/>
                             </label>
                         </th>
                         <th class="col col-user">
@@ -347,7 +307,7 @@
 
                     <div class="profile-image-container flex" id="profileImageContainer">
                         <div class="default-profile-photo flex">
-                            <img src="../assets/add-employee-default-user.svg" alt="Default User Image"
+                            <img src="../../assets/add-employee-default-user.svg" alt="Default User Image"
                                 id="profileImagePreview" />
                         </div>
 
@@ -466,7 +426,7 @@
                                     </div>
                                 </div>
                                 <div class="form-buttons">
-                                    <button type="reset" id="cancel" onclick="closeAddEmployeeModal()">Cancel</button>
+                                    <button type="reset" id="cancel">Cancel</button>
                                     <button type="submit" id="submitButton" data-dismiss="modal">Add Employee</button>
                                 </div>
                             </div>
@@ -477,15 +437,14 @@
             <div class="delete-confirmation flex-column">
                 <p>Are you sure you want to delete selected rows</p>
                 <div class="btn-group ">
-                    <button type="submit" class="yes" onclick="deleteRow()">Yes</button>
-                    <button type="reset" class="no" onclick="closeDeleteConfirmation()">No</button>
+                    <button type="submit" class="delete-yes">Yes</button>
+                    <button type="reset" class="delete-no" onclick="closeDeleteConfirmation()">No</button>
                 </div>
             </div>
         </div>
     </div>
 </body>
-<script src="employeeHomePage.js"></script>
-<script src="script.js" defer></script>
-
+<script type="module" src="../js/index.js"></script>
+<!-- <script type="module" src="./js/script.js"></script> -->
 
 </html>
