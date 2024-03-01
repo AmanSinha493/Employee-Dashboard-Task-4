@@ -1,4 +1,6 @@
-import { EmployeeData } from './employee.js';
+import { EmployeeData } from './dataType.js';
+import { Roles } from './handleRoles.js';
+import { roleData } from './dataType.js';
 
 
 export class Storage {
@@ -15,7 +17,7 @@ export class Storage {
         }
         sessionStorage.setItem("employeesTableDetail", JSON.stringify(savedEmployees));
     }
-    employeesDetails(key: string): EmployeeData[] | null  {
+    employeesDetails(key: string): EmployeeData[] | null {
         const employees: EmployeeData[] | null = JSON.parse(sessionStorage.getItem(key) || 'null');
         return employees;
     }
@@ -40,5 +42,16 @@ export class Storage {
         sessionStorage.setItem("employeesTableDetail", JSON.stringify(savedEmployees));
     }
 
-    
+    populateFilteredRoles(filteredRoles: roleData[]) {
+        let roles = new Roles();
+        sessionStorage.setItem('FilteredRolesDetail', JSON.stringify(filteredRoles));
+        const allRoles = JSON.parse(sessionStorage.getItem('FilteredRolesDetail') || 'null')
+        if (allRoles && allRoles.length > 0) {
+            allRoles.forEach((role: roleData) => {
+                roles.createRoleBlock(role);
+            });
+        } else {
+            console.log('No employee data available.');
+        }
+    }
 }

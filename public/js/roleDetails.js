@@ -1,5 +1,5 @@
 import { AddEmployee } from "./handleForms.js";
-import { Collapse } from "./script.js";
+import { Collapse } from "./common.js";
 import { EmployeeModal } from "./handleForms.js";
 let addEmp = new AddEmployee();
 let collapse = new Collapse();

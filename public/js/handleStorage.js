@@ -1,3 +1,4 @@
+import { Roles } from './handleRoles.js';
 export class Storage {
     constructor() { }
     ;
@@ -33,5 +34,18 @@ export class Storage {
         }
         savedEmployees = savedEmployees.filter((savedEmployee) => savedEmployee.empNo != selectedEmployee);
         sessionStorage.setItem("employeesTableDetail", JSON.stringify(savedEmployees));
+    }
+    populateFilteredRoles(filteredRoles) {
+        let roles = new Roles();
+        sessionStorage.setItem('FilteredRolesDetail', JSON.stringify(filteredRoles));
+        const allRoles = JSON.parse(sessionStorage.getItem('FilteredRolesDetail') || 'null');
+        if (allRoles && allRoles.length > 0) {
+            allRoles.forEach((role) => {
+                roles.createRoleBlock(role);
+            });
+        }
+        else {
+            console.log('No employee data available.');
+        }
     }
 }

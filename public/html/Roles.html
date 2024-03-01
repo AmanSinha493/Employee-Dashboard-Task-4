@@ -32,14 +32,7 @@
                 <div class="dasboard grid side-bar-options">
                     <div class="lock-icon"><img src="../../assets/Horizontal nav/Dashboard.svg" alt="lock-icon"></div>
                     <div class="text grey-color">Dasboard</div>
-                    <!-- <div class="selected-mark"></div> -->
-                    <!-- <div class="arrow flex"><i class="fa-solid fa-angle-right"></i></div> -->
                 </div>
-                <!-- <div class="roles grid">
-                    <div class="lock-icon"><img src="../assets/bx-lock.png" alt="lock-icon"></div>
-                    <div class="text grey-color">Roles</div>
-                    <div class="arrow flex"><i class="fa-solid fa-angle-right"></i></div>
-                </div> -->
                 <div class="employees flex-column">
                     <a href="./index.html">
                         <div class="employees-bar side-bar-options grid">
@@ -48,13 +41,11 @@
                         </div>
                     </a>
                 </div>
-                <!-- <div class="user-management"> -->
                 <div class="light-grey function-name">Roles/ User Management</div>
-                <!-- <div class="user-management-sub-options"> -->
-
                 <a href="#">
                     <div class="user-management__roles grid side-bar-options selected">
-                        <div class="lock-icon"><img src="../../assets/Horizontal nav/selected role.svg" alt="lock-icon"></div>
+                        <div class="lock-icon"><img src="../../assets/Horizontal nav/selected role.svg" alt="lock-icon">
+                        </div>
                         <div class="text">Roles</div>
                         <div class="arrow flex"><i class="fa-solid fa-angle-right"></i></div>
                         <div class="selected-mark"></div>
@@ -62,13 +53,10 @@
                 </a>
 
                 <div class="user-management__assign grid side-bar-options">
-                    <!-- <div class="lock-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M4 22a8 8 0 1 1 16 0h-2a6 6 0 0 0-12 0zm8-9c-3.315 0-6-2.685-6-6s2.685-6 6-6s6 2.685 6 6s-2.685 6-6 6m0-2c2.21 0 4-1.79 4-4s-1.79-4-4-4s-4 1.79-4 4s1.79 4 4 4"/></svg></div> -->
                     <div class="lock-icon assign-roles-img"><img src="../../assets/Horizontal nav/assign user.svg"
                             alt="lock-icon"></div>
                     <div class="text grey-color assign-roles">Assign User Roles</div>
                     <div class="arrow flex"><i class="fa-solid fa-angle-right light grey"></i></div>
-                    <!-- <div class="employee-selected-mark"></div> -->
-                    <!-- </div> -->
                 </div>
             </div>
 
@@ -86,15 +74,18 @@
                 <img src="../../assets/tezo Icon.png" alt="">
             </div>
             <div class="icon-container flex-column">
-                <div class="lock-icon-collapse"><img src="../../assets/Horizontal nav/Dashboard.svg" alt="lock-icon"></div>
+                <div class="lock-icon-collapse"><img src="../../assets/Horizontal nav/Dashboard.svg" alt="lock-icon">
+                </div>
                 <div class="employees-bar-collapse flex">
-                    <div class="lock-icon-collapse"><img src="../../assets/Horizontal nav/Employees.svg" alt="lock-icon">
+                    <div class="lock-icon-collapse"><img src="../../assets/Horizontal nav/Employees.svg"
+                            alt="lock-icon">
                     </div>
 
                     <div class="selected-mark-collapsed"></div>
                 </div>
                 <a href="./Roles.html">
-                    <div class="lock-icon-collapse"><img src="../../assets/Horizontal nav/Roles.svg" alt="lock-icon"></div>
+                    <div class="lock-icon-collapse"><img src="../../assets/Horizontal nav/Roles.svg" alt="lock-icon">
+                    </div>
                 </a>
 
                 <div class="lock-icon-collapse assign-roles-img"><img src="../../assets/Horizontal nav/assign user.svg"
@@ -103,7 +94,6 @@
             </div>
         </div>
         <div class="employees-detail flex-column">
-            <!-- <button class="collapse-button"><img src="../../assets/handle.png" alt=""></button> -->
             <img src="../../assets/handle.png" alt="" class="collapse-btn collapse-button">
 
             <div class="search-bar flex">
@@ -113,11 +103,13 @@
                 </div>
 
                 <div class="search-bar-name-block flex">
-                    <div class="language-icon search-bar-icon"><img src="../../assets/IconButton.png" alt="language-icon">
+                    <div class="language-icon search-bar-icon"><img src="../../assets/IconButton.png"
+                            alt="language-icon">
                     </div>
                     <div class="block-icon search-bar-icon"><img src="../../assets/icon1.png" alt="language-icon"></div>
                     <div class="theme-icon search-bar-icon"><img src="../../assets/icon2.png" alt="language-icon"></div>
-                    <div class="notification-icon search-bar-icon"><img src="../../assets/icon3.png" alt="language-icon">
+                    <div class="notification-icon search-bar-icon"><img src="../../assets/icon3.png"
+                            alt="language-icon">
                     </div>
                     <div class="admin flex">
                         <div class="admin-img"><img src="../../assets/admin-search.png" alt="admin"></div>
@@ -150,7 +142,7 @@
                     <div>Filter</div>
 
                     <img src="../../assets/filter-3-line red.svg" alt="filter" class="red-filter">
-                    <div class="flex-column " id="location-filter">
+                    <div class="flex-column filter" id="location-filter">
                         <div class="filter-options dark-grey flex-column">
                             Location</div>
                         <div class="location-dropdown hide">
@@ -161,7 +153,7 @@
 
                     </div>
 
-                    <div class="flex-column" id="department-filter">
+                    <div class="flex-column filter" id="department-filter">
                         <div class="filter-options dark-grey flex-column">Department
                         </div>
                         <div class="department-dropdown hide">
@@ -171,8 +163,8 @@
                     </div>
                 </div>
                 <div class="flex filter-action">
-                    <div class="reset-btn flex" onclick="applyRoleReset()">Reset</div>
-                    <div class="apply-btn flex" onclick="applyRoleFilter()">Apply</div>
+                    <div class="reset-btn flex">Reset</div>
+                    <div class="apply-btn flex">Apply</div>
                 </div>
             </div>
             <div class="role-block-container grid">
@@ -181,4 +173,6 @@
     </div>
 </body>
 <script type="module" src="../js/roles.js"></script>
+
 </html>
+

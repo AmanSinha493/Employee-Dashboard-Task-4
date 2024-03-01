@@ -1,18 +1,12 @@
-import { EmployeeData } from "./employee";
+import { EmployeeData } from "./dataType";
 import { AddEmployee } from "./handleForms.js";
-import { Collapse } from "./script.js";
+import { Collapse } from "./common.js";
 import { EmployeeModal } from "./handleForms.js";
-
+import { roleData } from "./dataType";
 let addEmp= new AddEmployee();
 let collapse=new Collapse();
 let modal=new EmployeeModal();
 
-type roleData = [string,
-    {
-        employees: EmployeeData[],
-        roleId: string
-    }
-];
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelector('.collapse-button')?.addEventListener( 'click',collapse.sideBar);
     let url = document.URL;

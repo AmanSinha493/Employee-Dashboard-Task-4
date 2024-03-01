@@ -1,6 +1,8 @@
 import { Storage } from './handleStorage.js';
+import { EmployeeTable } from './common.js';
+// import { showToaster } from './common.js';
+let empTable = new EmployeeTable();
 let storage = new Storage();
-// let populate = new Populate();
 let populate;
 async function initiaize() {
     let p = await import("./populate.js");
@@ -8,17 +10,21 @@ async function initiaize() {
 }
 initiaize();
 export class EmployeeModal {
-    constructor() { }
+    constructor() {
+        this.closeAddEmployeeModal = this.closeAddEmployeeModal.bind(this);
+    }
     ;
     openAddEmployeeModal() {
         var AddEmployeeModal = document.getElementsByClassName('add-employee-form')[0];
         AddEmployeeModal.classList.add('show-addEmployee-form');
     }
     closeAddEmployeeModal() {
+        // if((event.target as HTMLElement).id=='cancel')
+        //     showToaster("Failed",false);
         const form = document.getElementById("employeeForm");
         form.reset();
         [...form.querySelectorAll('input'), ...form.querySelectorAll('select')].forEach(element => {
-            showValidInput(element, "");
+            this.showValidInput(element, "");
             element.disabled = false;
         });
         document.getElementById('profileImagePreview').src = "../../assets/add-employee-default-user.svg";
@@ -34,10 +40,20 @@ export class EmployeeModal {
             populate.populateTable();
         }
     }
+    showValidInput(element, message) {
+        element.style.outlineColor = "red";
+        let parentDiv = element.parentElement;
+        let span = parentDiv?.querySelector('span');
+        if (span) {
+            span.innerHTML = message;
+            span.style.color = "red";
+        }
+    }
 }
 export class AddEmployee {
     constructor() {
         this.modal = new EmployeeModal();
+        this.checkValidation = this.checkValidation.bind(this);
     }
     ;
     displayImagePreview(event) {
@@ -61,73 +77,80 @@ export class AddEmployee {
                 case 'empNo':
                     if (!editflag) {
                         if (element.value === "") {
-                            showValidInput(element, `&#9888; This is a required field`);
+                            this.modal.showValidInput(element, `&#9888; This is a required field`);
                             flag = false;
                         }
                         else if (employees.some(emp => emp.empNo === element.value)) {
-                            showValidInput(element, `&#9888; Employee ID already exists!`);
+                            this.modal.showValidInput(element, `&#9888; Employee ID already exists!`);
                             flag = false;
                         }
                         else {
-                            showValidInput(element, ``);
+                            this.modal.showValidInput(element, ``);
                         }
                     }
                     break;
                 case 'mobileNumber':
                     if (element.value === "") {
-                        showValidInput(element, `&#9888; This is a required field`);
+                        this.modal.showValidInput(element, `&#9888; This is a required field`);
                         flag = false;
                     }
-                    else if (element.value.toString().length !== 10) {
-                        showValidInput(element, `&#9888; Enter a valid number`);
+                    else if (!/^[1-9][0-9]{9}$/.test(element.value)) {
+                        this.modal.showValidInput(element, `&#9888; Enter a valid number`);
                         flag = false;
                     }
                     else {
-                        showValidInput(element, ``);
+                        this.modal.showValidInput(element, ``);
                     }
                     break;
                 case 'firstName':
                 case 'lastName':
                     if (element.value === "") {
-                        showValidInput(element, `&#9888; This is a required field`);
+                        this.modal.showValidInput(element, `&#9888; This is a required field`);
                         flag = false;
                     }
                     else if (!/^[A-Za-z]+$/.test(element.value)) {
-                        showValidInput(element, `&#9888; Only alphabets are allowed`);
+                        this.modal.showValidInput(element, `&#9888; Only alphabets are allowed`);
                         flag = false;
                     }
                     else {
-                        showValidInput(element, ``);
+                        this.modal.showValidInput(element, ``);
                     }
                     break;
                 case 'email':
                     if (element.value === "") {
-                        showValidInput(element, `&#9888; This is a required field`);
+                        this.modal.showValidInput(element, `&#9888; This is a required field`);
                         flag = false;
                     }
                     else if (!/^[a-zA-Z0-9._]+@[a-zA-Z0-9.]+\.[a-zA-Z]{2,}$/.test(element.value)) {
-                        showValidInput(element, `&#9888; Invalid Email Address`);
+                        this.modal.showValidInput(element, `&#9888; Invalid Email Address`);
                         flag = false;
                     }
                     else {
-                        showValidInput(element, ``);
+                        this.modal.showValidInput(element, ``);
                     }
                     break;
                 case 'joiningDate':
                     const currentDate = new Date();
+                    const currentYear = currentDate.getFullYear();
                     const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-                    const currentDateFormatted = `${currentDate.getFullYear()}${currentMonth}${currentDate.getDate()}`;
-                    const inputDate = element.value.split('-').join('');
+                    const currentDay = currentDate.getDate().toString().padStart(2, '0');
+                    const currentDateFormatted = parseInt(`${currentYear}${currentMonth}${currentDay}`);
+                    const inputDateParts = element.value.split('-');
                     if (element.value === "") {
-                        showValidInput(element, `&#9888; This is a required field`);
-                        flag = false;
-                    }
-                    else if (parseInt(inputDate) > parseInt(currentDateFormatted)) {
-                        showValidInput(element, `&#9888; Invalid date`);
+                        this.modal.showValidInput(element, `&#9888; This is a required field`);
                         flag = false;
                     }
                     else {
-                        showValidInput(element, ``);
+                        const inputYear = parseInt(inputDateParts[0]);
+                        const inputMonth = parseInt(inputDateParts[1]);
+                        const inputDay = parseInt(inputDateParts[2]);
+                        if (inputYear > currentYear || (inputYear === currentYear && inputMonth > currentDate.getMonth() + 1) || (inputYear === currentYear && inputMonth === currentDate.getMonth() + 1 && inputDay > currentDay)) {
+                            this.modal.showValidInput(element, `&#9888; Invalid date`);
+                            flag = false;
+                        }
+                        else {
+                            this.modal.showValidInput(element, ``);
+                        }
                     }
                     break;
                 default:
@@ -136,20 +159,20 @@ export class AddEmployee {
         }
         for (const element of formSelect) {
             if (element.value === '') {
-                showValidInput(element, `&#9888; This is a required field`);
+                this.modal.showValidInput(element, `&#9888; This is a required field`);
                 flag = false;
             }
             else {
-                showValidInput(element, ``);
+                this.modal.showValidInput(element, ``);
             }
         }
         if (!flag)
             return;
         if (editflag) {
-            updateEmployee(document.getElementById('empNo').value);
+            this.updateEmployee(document.getElementById('empNo').value);
         }
         else {
-            handleFormSubmit();
+            this.handleFormSubmit();
         }
         if (location.href.includes("index.html")) {
             populate.unpopulateTable();
@@ -196,87 +219,66 @@ export class AddEmployee {
             submitButton.textContent = "Apply Changes";
         }
     }
-}
-function showValidInput(element, message) {
-    element.style.outlineColor = "red";
-    let parentDiv = element.parentElement;
-    let span = parentDiv?.querySelector('span');
-    if (span) {
-        span.innerHTML = message;
-        span.style.color = "red";
-    }
-}
-let modal = new EmployeeModal();
-function handleFormSubmit() {
-    const form = document.querySelector("#employeeForm");
-    const formData = new FormData(form);
-    const empNo = formData.get("empNo");
-    const firstName = formData.get("firstName");
-    const lastName = formData.get("lastName");
-    const email = formData.get("email");
-    const joiningDate = formData.get("joiningDate").split('-').reverse().join('/');
-    const location = formData.get("location");
-    const mobile = formData.get("mobileNumber");
-    const jobTitle = formData.get("jobTitle");
-    const department = formData.get("department");
-    const profileImageFile = (formData.get("profileImage") || undefined);
-    const name = `${firstName} ${lastName}`;
-    let newEmployeeDetails = {
-        "dept": department,
-        "email": email,
-        "empNo": empNo,
-        "img": "",
-        "joinDate": joiningDate,
-        "location": location,
-        "mobile": mobile,
-        "name": name,
-        "role": jobTitle,
-        "status": "Active"
-    };
-    if (profileImageFile) {
-        const reader = new FileReader();
-        reader.readAsDataURL(profileImageFile);
-        reader.onload = function () {
-            newEmployeeDetails.img = reader.result;
+    handleFormSubmit() {
+        const form = document.querySelector("#employeeForm");
+        const formData = new FormData(form);
+        const { empNo, firstName, lastName, email, joiningDate, location, jobTitle, department, mobileNumber } = Object.fromEntries(formData);
+        const profileImageFile = (formData.get("profileImage") || undefined);
+        const name = `${firstName} ${lastName}`;
+        let newEmployeeDetails = {
+            "dept": department,
+            "email": email,
+            "empNo": empNo,
+            "img": "",
+            "joinDate": joiningDate.split('-').reverse().join('/'),
+            "location": location,
+            "mobile": mobileNumber,
+            "name": name,
+            "role": jobTitle,
+            "status": "Active"
+        };
+        if (profileImageFile) {
+            const reader = new FileReader();
+            reader.readAsDataURL(profileImageFile);
+            reader.onload = function () {
+                newEmployeeDetails.img = reader.result;
+                storage.saveToSessionStorage(newEmployeeDetails);
+            };
+        }
+        else {
             storage.saveToSessionStorage(newEmployeeDetails);
-        };
+        }
+        form.reset();
+        alert("Employee data has been stored !");
+        this.modal.closeAddEmployeeModal();
+        empTable.showToaster("Employee Added");
     }
-    else {
-        storage.saveToSessionStorage(newEmployeeDetails);
+    updateEmployee(id) {
+        const employees = storage.employeesDetails('employeesTableDetail');
+        const employee = employees.find(emp => emp.empNo == id);
+        if (!employee)
+            return;
+        const form = document.getElementById("employeeForm");
+        const formData = new FormData(form);
+        const { firstName, lastName, email, joiningDate, location, jobTitle, department, mobileNumber } = Object.fromEntries(formData);
+        employee.email = email;
+        employee.location = location;
+        employee.role = jobTitle;
+        employee.dept = department;
+        employee.name = `${firstName} ${lastName}`;
+        employee.mobile = mobileNumber;
+        employee.joinDate = joiningDate.split('-').reverse().join('/');
+        const profileImageFile = formData.get("profileImage");
+        if (profileImageFile.name !== '') {
+            const reader = new FileReader();
+            reader.readAsDataURL(profileImageFile);
+            reader.onload = function () {
+                employee.img = reader.result;
+                sessionStorage.setItem('employeesTableDetail', JSON.stringify(employees));
+            };
+        }
+        sessionStorage.setItem('employeesTableDetail', JSON.stringify(employees));
+        this.modal.closeAddEmployeeModal();
+        empTable.showToaster("Employee Updated");
     }
-    form.reset();
-    alert("Employee data has been stored !");
-    modal.closeAddEmployeeModal();
-}
-function updateEmployee(id) {
-    const employees = storage.employeesDetails('employeesTableDetail');
-    const employee = employees.find(emp => emp.empNo == id);
-    if (!employee)
-        return;
-    const form = document.getElementById("employeeForm");
-    const formData = new FormData(form);
-    const firstName = formData.get("firstName");
-    const lastName = formData.get("lastName");
-    const email = formData.get("email");
-    const joiningDate = formData.get("joiningDate");
-    const location = formData.get("location");
-    const jobTitle = formData.get("jobTitle");
-    const department = formData.get("department");
-    employee.email = email;
-    employee.location = location;
-    employee.role = jobTitle;
-    employee.dept = department;
-    employee.name = `${firstName} ${lastName}`;
-    employee.joinDate = joiningDate.split('-').reverse().join('/');
-    const profileImageFile = formData.get("profileImage");
-    if (profileImageFile.name !== '') {
-        const reader = new FileReader();
-        reader.readAsDataURL(profileImageFile);
-        reader.onload = function () {
-            employee.img = reader.result;
-            sessionStorage.setItem('employeesTableDetail', JSON.stringify(employees));
-        };
-    }
-    sessionStorage.setItem('employeesTableDetail', JSON.stringify(employees));
-    modal.closeAddEmployeeModal();
 }

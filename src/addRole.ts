@@ -1,6 +1,6 @@
 
 import { AddRoles } from "./handleRoles.js";
-import { Collapse } from "./script.js";
+import { Collapse } from "./common.js";
 let addRole = new AddRoles();
 let collapse = new Collapse();
 
