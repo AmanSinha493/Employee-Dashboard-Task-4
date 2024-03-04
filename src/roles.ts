@@ -1,7 +1,7 @@
 import { Roles } from "./handleRoles.js";
 import { Filter } from "./filter.js";
-import { EmployeeTable } from './common.js';
-import { Collapse } from "./common.js";
+import { EmployeeTable } from './employeeTable.js';
+import { Collapse } from "./employeeTable.js";
 import { RoleFilter } from "./filter.js";
 let roleFilter=new RoleFilter();
 let collapse=new Collapse();

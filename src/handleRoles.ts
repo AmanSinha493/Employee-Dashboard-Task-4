@@ -4,17 +4,11 @@ import { roleData } from "./dataType.js";
 
 export class Roles {
     constructor() { };
-
     handleViewEmployee(roleName: string) {
         console.log(roleName);
         let url = "role-detail.html?" + roleName;
         window.open(url, "_self");
     }
-    // saveRoleToSessionStorage(role: roleData) {
-    //     let savedRoles = JSON.parse(sessionStorage.getItem("rolesDetail")!) || [];
-    //     savedRoles.push(role);
-    //     sessionStorage.setItem("rolesDetail", JSON.stringify(savedRoles));
-    // }
     createRoleBlock(role: roleData) {
         let roleBlockContainer = document.getElementsByClassName('role-block-container')[0];
         let roleBlock = document.createElement('div');

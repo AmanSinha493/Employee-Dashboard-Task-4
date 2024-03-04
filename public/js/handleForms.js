@@ -1,6 +1,5 @@
 import { Storage } from './handleStorage.js';
-import { EmployeeTable } from './common.js';
-// import { showToaster } from './common.js';
+import { EmployeeTable } from './employeeTable.js';
 let empTable = new EmployeeTable();
 let storage = new Storage();
 let populate;
@@ -19,8 +18,6 @@ export class EmployeeModal {
         AddEmployeeModal.classList.add('show-addEmployee-form');
     }
     closeAddEmployeeModal() {
-        // if((event.target as HTMLElement).id=='cancel')
-        //     showToaster("Failed",false);
         const form = document.getElementById("employeeForm");
         form.reset();
         [...form.querySelectorAll('input'), ...form.querySelectorAll('select')].forEach(element => {
@@ -197,7 +194,7 @@ export class AddEmployee {
         const nameParts = employee.name.split(' ');
         const selectedEmpJoinDate = employee.joinDate.split('/').reverse().join('-');
         document.getElementById('empNo').value = employee.empNo;
-        document.getElementById('empNo').disabled = true;
+        document.getElementById('empNo').readOnly = true;
         document.getElementById('firstName').value = nameParts[0];
         document.getElementById('lastName').value = nameParts.slice(1).join(' ');
         document.getElementById('email').value = employee.email;
@@ -216,6 +213,7 @@ export class AddEmployee {
             document.querySelector('.upload-profile-pic-btn').style.display = 'none';
         }
         else {
+            document.querySelector('#cancel').classList.add('edit');
             submitButton.textContent = "Apply Changes";
         }
     }
@@ -278,7 +276,15 @@ export class AddEmployee {
             };
         }
         sessionStorage.setItem('employeesTableDetail', JSON.stringify(employees));
+        // let checkChanges=empTable.checkForChanges()
+        // if(checkChanges)
         this.modal.closeAddEmployeeModal();
         empTable.showToaster("Employee Updated");
+    }
+    openEditConfirmation() {
+        document.getElementsByClassName('edit-cancel-popup')[0].classList.add('show-delete-confirmation');
+    }
+    closeEditConfirmation() {
+        document.getElementsByClassName('edit-cancel-popup')[0].classList.remove('show-delete-confirmation');
     }
 }

@@ -1,15 +1,21 @@
 
 import { Populate } from './populate.js';
 import { Storage } from './handleStorage.js';
-import { EmployeeTable } from './common.js';
+import { EmployeeTable } from './employeeTable.js';
 import { Roles } from './handleRoles.js';
 import { roleData } from './dataType.js';
-import { filterParameters } from './common.js';
 
 let employeeTable = new EmployeeTable();
 let populate = new Populate();
 let storage = new Storage()
 let role = new Roles();
+
+let locationInputs = document.getElementById(`location-filter`)!.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
+let statusInputs = document.getElementById(`status-filter`)?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
+let departmentInputs = document.getElementById(`department-filter`)!.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
+let filterIcon = document.getElementById('filter-icon') as HTMLImageElement;
+let allAlphabets = (document.querySelector('.a-to-z-filter') as HTMLElement)?.querySelectorAll('div:not(:first-child)') as NodeListOf<HTMLElement>;
+let rows = storage.employeesDetails('employeesTableDetail')!;
 
 class checkFilters {
     constructor() {
@@ -30,27 +36,32 @@ class checkFilters {
         const employeeFilter = employee.toLowerCase().split(' ').join('');
         return selectedFilters.includes(employeeFilter);
     }
-    applyFilter(event: HTMLElement) {;
-        let filterParam = filterParameters();       // filter parameters
+    applyFilter(event: HTMLElement) {
+        let selectedFilters: string[], filterParameters: string[] = [];
+        selectedFilters = Array.from(locationInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join('')!);
+        selectedFilters.length == 0 ? filterParameters.push('location') : filterParameters.push(...selectedFilters);
+        selectedFilters = Array.from(statusInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join('')!);
+        selectedFilters.length == 0 ? filterParameters.push('status') : filterParameters.push(...selectedFilters);
+        selectedFilters = Array.from(departmentInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join('')!);
+        selectedFilters.length == 0 ? filterParameters.push('department') : filterParameters.push(...selectedFilters);
         if (event.classList.contains('selected') && !event.classList.contains('apply-btn')) {
-            filterParam. allAlphabets.forEach(x => x.classList.remove('selected'));
-            filterParam.filterIcon.classList.remove('selected');
+            allAlphabets.forEach(x => x.classList.remove('selected'));
+            filterIcon.classList.remove('selected');
         }
         else if (!event.classList.contains('apply-btn')) {
-            filterParam. allAlphabets.forEach(x => x.classList.remove('selected'));
+            allAlphabets.forEach(x => x.classList.remove('selected'));
             event.classList.add('selected');
-            filterParam.filterIcon.classList.add('selected');
+            filterIcon.classList.add('selected');
         }
-        const selectedAlphabet = Array.from(filterParam.allAlphabets).filter(elem => elem.classList.contains('selected'));
+        const selectedAlphabet = Array.from(allAlphabets).filter(elem => elem.classList.contains('selected'));
         let letter = (selectedAlphabet.length != 0) ? selectedAlphabet[0].textContent! : '';
         let filteredEmployees = [];
         let status, location, department, alphabet;
-        let rows = storage.employeesDetails('employeesTableDetail')!;
         for (var i = 0; i < rows.length; i++) {
             alphabet = letter == '' ? true : rows[i].name.trim().toUpperCase()[0] === letter;
-            status = filterParam.allfilters.includes(rows[i].status.trim().toLowerCase()) || filterParam.allfilters.includes('status');
-            department = filterParam.allfilters.includes(rows[i].dept.trim().toLowerCase().split(' ').join('')) || filterParam.allfilters.includes('department');
-            location = filterParam.allfilters.includes(rows[i].location.trim().toLowerCase()) || filterParam.allfilters.includes('location');
+            status = filterParameters.includes(rows[i].status.trim().toLowerCase()) || filterParameters.includes('status');
+            department = filterParameters.includes(rows[i].dept.trim().toLowerCase().split(' ').join('')) || filterParameters.includes('department');
+            location = filterParameters.includes(rows[i].location.trim().toLowerCase()) || filterParameters.includes('location');
             if (status && location && department && alphabet) {
                 filteredEmployees.push(rows[i]);
             }
@@ -59,6 +70,7 @@ class checkFilters {
     }
 }
 let checkFilter = new checkFilters();
+
 export class Filter {
     constructor() {
     };
@@ -92,7 +104,7 @@ export class Filter {
             });
         });
     }
-    applyAllFilter() {
+    applyEmployeesFilter() {
         const alphabets = (document.querySelector('.a-to-z-filter') as HTMLElement).querySelectorAll('div:not(:first-child)') as NodeListOf<HTMLElement>;
         let nodes: HTMLElement[] = [...alphabets]
         nodes.push(document.querySelector('.apply-btn')!)
@@ -102,7 +114,7 @@ export class Filter {
             });
         });
     }
-    
+
 }
 
 export class RoleFilter {

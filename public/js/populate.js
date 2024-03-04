@@ -1,6 +1,6 @@
 import { Storage } from './handleStorage.js';
 import { AddEmployee } from './handleForms.js';
-import { EmployeeTable } from './common.js';
+import { EmployeeTable } from './employeeTable.js';
 let storage = new Storage();
 export class Populate {
     constructor() {

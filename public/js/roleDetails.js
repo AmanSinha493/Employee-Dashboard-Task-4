@@ -1,5 +1,5 @@
 import { AddEmployee } from "./handleForms.js";
-import { Collapse } from "./common.js";
+import { Collapse } from "./employeeTable.js";
 import { EmployeeModal } from "./handleForms.js";
 let addEmp = new AddEmployee();
 let collapse = new Collapse();
@@ -44,7 +44,6 @@ function createEmployeeBlock(employee) {
                             <div class="employee-name">${employee.name}</div>
                             <div class="employee-department grey-color">Head of Product Design</div>
                         </div>
-
                     </div>
                     <div class="employee-info-container flex-column">
                         <div class="employee-info flex">
@@ -65,6 +64,5 @@ function createEmployeeBlock(employee) {
                         </div>
                     </div>
                     <div class="view-btn flex">View<i class="fa-solid fa-arrow-right-long"></i></div>`;
-    // console.log(document.getElementsByClassName('view-btn')[0]);
     employeeBlockContainer.appendChild(employeeBlock);
 }

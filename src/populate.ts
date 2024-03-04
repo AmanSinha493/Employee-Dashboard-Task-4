@@ -1,15 +1,13 @@
 import { EmployeeData } from './dataType.js';
 import { Storage } from './handleStorage.js';
 import { AddEmployee } from './handleForms.js';
-import { EmployeeTable } from './common.js';
+import { EmployeeTable } from './employeeTable.js';
 
 let storage = new Storage()
 
 export class Populate {
-private addEmployee = new AddEmployee();
-
+    private addEmployee = new AddEmployee();
     private employeeTable = new EmployeeTable();
-
     constructor() {
         this.deleteRow = this.deleteRow.bind(this);
         this.selectAllRow = this.selectAllRow.bind(this);

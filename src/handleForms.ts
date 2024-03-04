@@ -1,8 +1,8 @@
 import { EmployeeData } from './dataType.js';
 import { Populate } from "./populate.js";
 import { Storage } from './handleStorage.js';
-import { EmployeeTable } from './common.js';
-// import { showToaster } from './common.js';
+import { EmployeeTable } from './employeeTable.js';
+
 let empTable=new EmployeeTable();
 let storage = new Storage();
 let populate: Populate;
@@ -21,9 +21,6 @@ export class EmployeeModal {
         AddEmployeeModal.classList.add('show-addEmployee-form');
     }
     closeAddEmployeeModal(): void {
-        // if((event.target as HTMLElement).id=='cancel')
-        //     showToaster("Failed",false);
-
         const form = document.getElementById("employeeForm") as HTMLFormElement;
         form.reset();
         [...form.querySelectorAll('input'), ...form.querySelectorAll('select')].forEach(element => {
@@ -190,9 +187,8 @@ export class AddEmployee {
         if (!employee) return;
         const nameParts = employee.name.split(' ');
         const selectedEmpJoinDate = employee.joinDate.split('/').reverse().join('-');
-
         (document.getElementById('empNo')! as HTMLInputElement).value = employee.empNo;
-        (document.getElementById('empNo')! as HTMLInputElement).disabled = true;
+        (document.getElementById('empNo')! as HTMLInputElement).readOnly = true;
         (document.getElementById('firstName')! as HTMLInputElement).value = nameParts[0];
         (document.getElementById('lastName')! as HTMLInputElement).value = nameParts.slice(1).join(' ');
         (document.getElementById('email')! as HTMLInputElement).value = employee.email;
@@ -202,7 +198,6 @@ export class AddEmployee {
         (document.getElementById('jobTitle')! as HTMLSelectElement).value = employee.role;
         (document.getElementById('department')! as HTMLSelectElement).value = employee.dept;
         (document.getElementById('profileImagePreview') as HTMLImageElement).src = employee.img;
-
         const submitButton = document.querySelector('#submitButton') as HTMLButtonElement;
         if (this.textContent.toLowerCase() != "edit") {
             submitButton.style.display = "none";
@@ -211,6 +206,7 @@ export class AddEmployee {
             inputs.forEach(input => input.disabled = true);
             (document.querySelector('.upload-profile-pic-btn') as HTMLButtonElement).style.display = 'none';
         } else {
+            (document.querySelector('#cancel')! as HTMLButtonElement).classList.add('edit');
             submitButton.textContent = "Apply Changes";
         }
     }
@@ -221,7 +217,6 @@ export class AddEmployee {
         const {empNo, firstName, lastName, email, joiningDate, location, jobTitle, department,mobileNumber } = Object.fromEntries(formData);
         const profileImageFile = (formData.get("profileImage") as File || undefined);
         const name = `${firstName} ${lastName}`;
-
         let newEmployeeDetails: EmployeeData = {
             "dept": <string>department,
             "email": <string>email,
@@ -274,7 +269,15 @@ export class AddEmployee {
             }
         }
         sessionStorage.setItem('employeesTableDetail', JSON.stringify(employees));
+        // let checkChanges=empTable.checkForChanges()
+        // if(checkChanges)
         this.modal.closeAddEmployeeModal();
         empTable.showToaster("Employee Updated");
+    }
+    openEditConfirmation(): void {
+        document.getElementsByClassName('edit-cancel-popup')[0].classList.add('show-delete-confirmation');
+    }
+    closeEditConfirmation(): void {
+        document.getElementsByClassName('edit-cancel-popup')[0].classList.remove('show-delete-confirmation');
     }
 }
