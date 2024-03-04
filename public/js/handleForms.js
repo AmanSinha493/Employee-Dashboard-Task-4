@@ -23,7 +23,7 @@ export class EmployeeModal {
             this.showValidInput(element, "");
             element.disabled = false;
         });
-        document.getElementById('profileImagePreview').src = "../../assets/add-employee-default-user.svg";
+        document.getElementById('profileImagePreview').src = "./assets/add-employee-default-user.svg";
         let submitBtn = document.querySelector('#submitButton');
         submitBtn.style.display = "";
         submitBtn.textContent = "Add Employee";

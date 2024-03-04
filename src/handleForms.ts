@@ -12,8 +12,8 @@ async function initiaize() {
 initiaize();
 
 export class EmployeeModal {
-    constructor() { 
-        this.closeAddEmployeeModal=this.closeAddEmployeeModal.bind(this);
+    constructor() {
+        this.closeAddEmployeeModal = this.closeAddEmployeeModal.bind(this);
     };
     openAddEmployeeModal(): void {
         var AddEmployeeModal = document.getElementsByClassName('add-employee-form')[0];
@@ -26,7 +26,7 @@ export class EmployeeModal {
             this.showValidInput(element, "");
             element.disabled = false;
         });
-        (document.getElementById('profileImagePreview')! as HTMLImageElement).src = "../../assets/add-employee-default-user.svg";
+        (document.getElementById('profileImagePreview')! as HTMLImageElement).src = "./assets/add-employee-default-user.svg";
         let submitBtn = (document.querySelector('#submitButton')! as HTMLButtonElement);
         submitBtn.style.display = "";
         submitBtn.textContent = "Add Employee";
@@ -121,31 +121,31 @@ export class AddEmployee {
                         this.modal.showValidInput(element, ``);
                     }
                     break;
-                    case 'joiningDate':
-                        const currentDate = new Date();
-                        const currentYear = currentDate.getFullYear();
-                        const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-                        const currentDay = currentDate.getDate().toString().padStart(2, '0');
-                        const currentDateFormatted = parseInt(`${currentYear}${currentMonth}${currentDay}`);
-                        
-                        const inputDateParts = element.value.split('-');
-                        if (element.value === "") {
-                            this.modal.showValidInput(element, `&#9888; This is a required field`);
+                case 'joiningDate':
+                    const currentDate = new Date();
+                    const currentYear = currentDate.getFullYear();
+                    const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+                    const currentDay = currentDate.getDate().toString().padStart(2, '0');
+                    const currentDateFormatted = parseInt(`${currentYear}${currentMonth}${currentDay}`);
+
+                    const inputDateParts = element.value.split('-');
+                    if (element.value === "") {
+                        this.modal.showValidInput(element, `&#9888; This is a required field`);
+                        flag = false;
+                    } else {
+                        const inputYear = parseInt(inputDateParts[0]);
+                        const inputMonth = parseInt(inputDateParts[1]);
+                        const inputDay = parseInt(inputDateParts[2]);
+
+                        if (inputYear > currentYear || (inputYear === currentYear && inputMonth > currentDate.getMonth() + 1) || (inputYear === currentYear && inputMonth === currentDate.getMonth() + 1 && (<string><unknown>inputDay) > (currentDay as string))) {
+                            this.modal.showValidInput(element, `&#9888; Invalid date`);
                             flag = false;
                         } else {
-                            const inputYear = parseInt(inputDateParts[0]);
-                            const inputMonth = parseInt(inputDateParts[1]);
-                            const inputDay = parseInt(inputDateParts[2]);
-                            
-                            if (inputYear > currentYear || (inputYear === currentYear && inputMonth > currentDate.getMonth() + 1) || (inputYear === currentYear && inputMonth === currentDate.getMonth() + 1 && (<string><unknown>inputDay)  > (currentDay as string))) {
-                                this.modal.showValidInput(element, `&#9888; Invalid date`);
-                                flag = false;
-                            } else {
-                                this.modal.showValidInput(element, ``);
-                            }
+                            this.modal.showValidInput(element, ``);
                         }
-                        break;
-                    
+                    }
+                    break;
+
                 default:
                     break;
             }
@@ -211,10 +211,10 @@ export class AddEmployee {
     }
 
     handleFormSubmit(): void {
-let empTable=new EmployeeTable();
+        let empTable = new EmployeeTable();
         const form = document.querySelector("#employeeForm") as HTMLFormElement;
         const formData = new FormData(form);
-        const {empNo, firstName, lastName, email, joiningDate, location, jobTitle, department,mobileNumber } = Object.fromEntries(formData);
+        const { empNo, firstName, lastName, email, joiningDate, location, jobTitle, department, mobileNumber } = Object.fromEntries(formData);
         const profileImageFile = (formData.get("profileImage") as File || undefined);
         const name = `${firstName} ${lastName}`;
         let newEmployeeDetails: EmployeeData = {
@@ -246,20 +246,20 @@ let empTable=new EmployeeTable();
     }
 
     updateEmployee(id: string | number): void {
-let empTable=new EmployeeTable();
+        let empTable = new EmployeeTable();
 
         const employees: EmployeeData[] = storage.employeesDetails('employeesTableDetail')!;
         const employee: EmployeeData | undefined = employees.find(emp => emp.empNo == id);
         if (!employee) return;
         const form = document.getElementById("employeeForm") as HTMLFormElement;
         const formData = new FormData(form);
-        const { firstName, lastName, email, joiningDate, location, jobTitle, department,mobileNumber } = Object.fromEntries(formData);
+        const { firstName, lastName, email, joiningDate, location, jobTitle, department, mobileNumber } = Object.fromEntries(formData);
         employee.email = <string>email;
         employee.location = <string>location;
         employee.role = <string>jobTitle;
         employee.dept = <string>department;
         employee.name = `${firstName} ${lastName}`;
-        employee.mobile=<string>mobileNumber;
+        employee.mobile = <string>mobileNumber;
         employee.joinDate = (joiningDate as string).split('-').reverse().join('/');
         const profileImageFile = formData.get("profileImage") as File;
         if (profileImageFile.name !== '') {
