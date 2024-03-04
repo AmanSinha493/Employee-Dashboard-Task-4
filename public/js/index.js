@@ -22,7 +22,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     async function employeeRowsJson() {
         try {
             if (!sessionStorage.getItem('employeesTableDetail')) {
-                const response = await fetch("../json/employeesDetails.json");
+                // const response = await fetch("../json/employeesDetails.json");
+                const response = await fetch("./public/json/employeesDetails.json");
                 var employeeList = await response.json();
                 for (let i = 0; i < employeeList.length; i++) {
                     console.log(employeeList[i]);

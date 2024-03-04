@@ -1,6 +1,5 @@
 import { Storage } from './handleStorage.js';
 import { EmployeeTable } from './employeeTable.js';
-let empTable = new EmployeeTable();
 let storage = new Storage();
 let populate;
 async function initiaize() {
@@ -218,6 +217,7 @@ export class AddEmployee {
         }
     }
     handleFormSubmit() {
+        let empTable = new EmployeeTable();
         const form = document.querySelector("#employeeForm");
         const formData = new FormData(form);
         const { empNo, firstName, lastName, email, joiningDate, location, jobTitle, department, mobileNumber } = Object.fromEntries(formData);
@@ -252,6 +252,7 @@ export class AddEmployee {
         empTable.showToaster("Employee Added");
     }
     updateEmployee(id) {
+        let empTable = new EmployeeTable();
         const employees = storage.employeesDetails('employeesTableDetail');
         const employee = employees.find(emp => emp.empNo == id);
         if (!employee)

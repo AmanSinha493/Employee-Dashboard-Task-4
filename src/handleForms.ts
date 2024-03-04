@@ -3,7 +3,6 @@ import { Populate } from "./populate.js";
 import { Storage } from './handleStorage.js';
 import { EmployeeTable } from './employeeTable.js';
 
-let empTable=new EmployeeTable();
 let storage = new Storage();
 let populate: Populate;
 async function initiaize() {
@@ -212,6 +211,7 @@ export class AddEmployee {
     }
 
     handleFormSubmit(): void {
+let empTable=new EmployeeTable();
         const form = document.querySelector("#employeeForm") as HTMLFormElement;
         const formData = new FormData(form);
         const {empNo, firstName, lastName, email, joiningDate, location, jobTitle, department,mobileNumber } = Object.fromEntries(formData);
@@ -246,6 +246,8 @@ export class AddEmployee {
     }
 
     updateEmployee(id: string | number): void {
+let empTable=new EmployeeTable();
+
         const employees: EmployeeData[] = storage.employeesDetails('employeesTableDetail')!;
         const employee: EmployeeData | undefined = employees.find(emp => emp.empNo == id);
         if (!employee) return;
