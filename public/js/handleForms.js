@@ -23,6 +23,7 @@ export class EmployeeModal {
             this.showValidInput(element, "");
             element.disabled = false;
         });
+        document.getElementById('empNo').readOnly = false;
         document.getElementById('profileImagePreview').src = "./assets/add-employee-default-user.svg";
         let submitBtn = document.querySelector('#submitButton');
         submitBtn.style.display = "";
@@ -165,7 +166,7 @@ export class AddEmployee {
         if (!flag)
             return;
         if (editflag) {
-            this.updateEmployee(document.getElementById('empNo').value);
+            this.updateEmployee(document.getElementById('empNo').value, event);
         }
         else {
             this.handleFormSubmit();
@@ -247,11 +248,11 @@ export class AddEmployee {
             storage.saveToSessionStorage(newEmployeeDetails);
         }
         form.reset();
-        alert("Employee data has been stored !");
+        // alert("Employee data has been stored !");
         this.modal.closeAddEmployeeModal();
         empTable.showToaster("Employee Added");
     }
-    updateEmployee(id) {
+    updateEmployee(id, event) {
         let empTable = new EmployeeTable();
         const employees = storage.employeesDetails('employeesTableDetail');
         const employee = employees.find(emp => emp.empNo == id);
@@ -260,6 +261,7 @@ export class AddEmployee {
         const form = document.getElementById("employeeForm");
         const formData = new FormData(form);
         const { firstName, lastName, email, joiningDate, location, jobTitle, department, mobileNumber } = Object.fromEntries(formData);
+        let checkChanges = empTable.checkForChanges(event);
         employee.email = email;
         employee.location = location;
         employee.role = jobTitle;
@@ -277,10 +279,9 @@ export class AddEmployee {
             };
         }
         sessionStorage.setItem('employeesTableDetail', JSON.stringify(employees));
-        // let checkChanges=empTable.checkForChanges()
-        // if(checkChanges)
         this.modal.closeAddEmployeeModal();
-        empTable.showToaster("Employee Updated");
+        if (checkChanges)
+            empTable.showToaster("Employee Updated");
     }
     openEditConfirmation() {
         document.getElementsByClassName('edit-cancel-popup')[0].classList.add('show-delete-confirmation');

@@ -142,4 +142,3 @@ export class RoleFilter {
         employeeTable.checkdisableFilterButton();
     }
 }
-

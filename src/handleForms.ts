@@ -26,6 +26,7 @@ export class EmployeeModal {
             this.showValidInput(element, "");
             element.disabled = false;
         });
+       (document.getElementById('empNo') as HTMLInputElement).readOnly = false;
         (document.getElementById('profileImagePreview')! as HTMLImageElement).src = "./assets/add-employee-default-user.svg";
         let submitBtn = (document.querySelector('#submitButton')! as HTMLButtonElement);
         submitBtn.style.display = "";
@@ -160,7 +161,7 @@ export class AddEmployee {
         }
         if (!flag) return;
         if (editflag) {
-            this.updateEmployee((document.getElementById('empNo') as HTMLInputElement).value);
+            this.updateEmployee((document.getElementById('empNo') as HTMLInputElement).value,event);
         } else {
             this.handleFormSubmit();
         }
@@ -240,20 +241,20 @@ export class AddEmployee {
             storage.saveToSessionStorage(newEmployeeDetails);
         }
         form.reset();
-        alert("Employee data has been stored !");
+        // alert("Employee data has been stored !");
         this.modal.closeAddEmployeeModal();
         empTable.showToaster("Employee Added");
     }
 
-    updateEmployee(id: string | number): void {
+    updateEmployee(id: string | number,event:Event): void {
         let empTable = new EmployeeTable();
-
         const employees: EmployeeData[] = storage.employeesDetails('employeesTableDetail')!;
         const employee: EmployeeData | undefined = employees.find(emp => emp.empNo == id);
         if (!employee) return;
         const form = document.getElementById("employeeForm") as HTMLFormElement;
         const formData = new FormData(form);
         const { firstName, lastName, email, joiningDate, location, jobTitle, department, mobileNumber } = Object.fromEntries(formData);
+        let checkChanges=empTable.checkForChanges(event);
         employee.email = <string>email;
         employee.location = <string>location;
         employee.role = <string>jobTitle;
@@ -271,10 +272,9 @@ export class AddEmployee {
             }
         }
         sessionStorage.setItem('employeesTableDetail', JSON.stringify(employees));
-        // let checkChanges=empTable.checkForChanges()
-        // if(checkChanges)
         this.modal.closeAddEmployeeModal();
-        empTable.showToaster("Employee Updated");
+        if(checkChanges)
+            empTable.showToaster("Employee Updated");
     }
     openEditConfirmation(): void {
         document.getElementsByClassName('edit-cancel-popup')[0].classList.add('show-delete-confirmation');
