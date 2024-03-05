@@ -6,7 +6,7 @@ import { roleData } from './dataType.js';
 export class Storage {
     constructor() { };
     saveToSessionStorage(employee: EmployeeData) {
-        let savedEmployees: EmployeeData[] = JSON.parse(sessionStorage.getItem("employeesTableDetail") || 'null')
+        let savedEmployees: EmployeeData[] = JSON.parse(sessionStorage.getItem("employeesTableDetail") || '')
         console.log(savedEmployees);
         if (savedEmployees == null) {
             savedEmployees = [];
@@ -18,12 +18,12 @@ export class Storage {
         sessionStorage.setItem("employeesTableDetail", JSON.stringify(savedEmployees));
     }
     employeesDetails(key: string): EmployeeData[] | null {
-        const employees: EmployeeData[] | null = JSON.parse(sessionStorage.getItem(key) || 'null');
+        const employees: EmployeeData[] | null = JSON.parse(sessionStorage.getItem(key) || '');
         return employees;
     }
 
     getFilteredEmployees() {
-        const employees: EmployeeData[] | null = JSON.parse(sessionStorage.getItem('FilteredEmployeesDetail') || 'null');
+        const employees: EmployeeData[] | null = JSON.parse(sessionStorage.getItem('FilteredEmployeesDetail') || '');
         return employees;
     }
 
@@ -33,7 +33,7 @@ export class Storage {
     }
 
     deleteFromSessionStorage(employee: HTMLElement) {
-        let savedEmployees: EmployeeData[] = JSON.parse(sessionStorage.getItem("employeesTableDetail") || '{}')!;
+        let savedEmployees: EmployeeData[] = JSON.parse(sessionStorage.getItem("employeesTableDetail") || '')!;
         let selectedEmployee: string | null;
         if (employee.querySelector('.col-emp-no') != null) {
             selectedEmployee = employee.querySelector('.col-emp-no')!.textContent;
@@ -45,7 +45,7 @@ export class Storage {
     populateFilteredRoles(filteredRoles: roleData[]) {
         let roles = new Roles();
         sessionStorage.setItem('FilteredRolesDetail', JSON.stringify(filteredRoles));
-        const allRoles = JSON.parse(sessionStorage.getItem('FilteredRolesDetail') || 'null')
+        const allRoles = JSON.parse(sessionStorage.getItem('FilteredRolesDetail') || '')
         if (allRoles && allRoles.length > 0) {
             allRoles.forEach((role: roleData) => {
                 roles.createRoleBlock(role);
