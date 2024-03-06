@@ -2,7 +2,7 @@ import { Populate } from './populate.js';
 import { Storage } from './handleStorage.js';
 import { AddEmployee } from "./handleForms.js";
 import { EmployeeModal } from "./handleForms.js";
-let storage = new Storage();
+// import { Role } from './dataType.js';
 export class Collapse {
     constructor() {
         this.isCollapsed = true;
@@ -54,15 +54,15 @@ export class EmployeeTable {
         let table = document.querySelector(".employee-table tbody");
         for (let i = 0; i < table.rows.length; i++) {
             let row = table.rows[i];
-            let name = row.cells[1].textContent;
-            if (name != null) {
-                name = name.split(" ").join("").toLowerCase().trim();
-                if (!name.startsWith(searchInput)) {
-                    row.style.display = "none";
-                }
-                else {
-                    row.style.display = "";
-                }
+            let name = row.cells[1].textContent.toLowerCase();
+            let location = row.cells[2].textContent.toLowerCase();
+            let dept = row.cells[3].textContent.toLowerCase();
+            let role = row.cells[4].textContent.toLowerCase();
+            if (name.includes(searchInput) || location.includes(searchInput) || dept.includes(searchInput) || role.includes(searchInput)) {
+                row.style.display = "";
+            }
+            else {
+                row.style.display = "none";
             }
         }
     }
@@ -86,7 +86,6 @@ export class EmployeeTable {
         }
     }
     selectFilter(event) {
-        console.log(event);
         let checkbox = this.querySelector('input');
         const element = event.target;
         if (element == checkbox)
@@ -136,34 +135,46 @@ export class EmployeeTable {
     checkForEditChanges(event) {
         let addEmp = new AddEmployee();
         let modal = new EmployeeModal();
-        let button = event.currentTarget;
-        if (button.classList.contains('edit')) {
-            let x = this.checkForChanges(event);
-            if (!x)
-                modal.closeAddEmployeeModal();
-            else
-                addEmp.openEditConfirmation();
-        }
-        else
+        let x = this.checkForChanges(event);
+        if (!x)
             modal.closeAddEmployeeModal();
+        else
+            addEmp.openEditConfirmation();
     }
     checkForChanges(event) {
+        let storage = new Storage();
+        console.log(this);
+        console.log(event.currentTarget);
         event.preventDefault();
         const employees = storage.employeesDetails('employeesTableDetail');
         const form = document.getElementById("employeeForm");
         const formData = new FormData(form);
         const { empNo, firstName, lastName, email, joiningDate, location, jobTitle, department, mobileNumber } = Object.fromEntries(formData);
+        console.log({ empNo, firstName, lastName, email, joiningDate, location, jobTitle, department, mobileNumber });
         const employee = employees.find(emp => emp.empNo === empNo);
-        if (!employee)
+        let changesDetected = false;
+        if ((event.currentTarget.classList.contains('edit') && !employee) || (event.currentTarget.classList.contains('view')))
             return false;
-        const changesDetected = (firstName !== employee.name.split(' ')[0] ||
-            lastName !== employee.name.split(' ').slice(1).join(' ') ||
-            email !== employee.email ||
-            joiningDate.split('-').reverse().join('/') !== employee.joinDate ||
-            location !== employee.location ||
-            jobTitle !== employee.role ||
-            department !== employee.dept ||
-            mobileNumber !== employee.mobile);
+        else if (event.currentTarget.classList.contains('edit')) {
+            changesDetected = (firstName !== employee.name.split(' ')[0] ||
+                lastName !== employee.name.split(' ').slice(1).join(' ') ||
+                email !== employee.email ||
+                joiningDate.split('-').reverse().join('/') !== employee.joinDate ||
+                location !== employee.location ||
+                jobTitle !== employee.role ||
+                department !== employee.dept ||
+                mobileNumber !== employee.mobile);
+        }
+        else {
+            changesDetected = (firstName !== "" ||
+                lastName !== "" ||
+                email !== "" ||
+                joiningDate.split('-').reverse().join('/') !== "" ||
+                location !== "" ||
+                jobTitle !== "" ||
+                department !== "" ||
+                mobileNumber !== "");
+        }
         return changesDetected;
     }
 }
@@ -173,6 +184,7 @@ export class ExportCsv {
     }
     ;
     tableToCSV() {
+        let storage = new Storage();
         let employees = storage.employeesDetails('FilteredEmployeesDetail');
         let csvContent = this.arrayToCSV(employees);
         this.downloadCSVFile(csvContent);
@@ -210,6 +222,7 @@ export class SortTable {
         }
     }
     sortColumn(column) {
+        let storage = new Storage();
         let populate = new Populate();
         let employees = storage.employeesDetails('employeesTableDetail');
         let value = column.textContent?.trim().split(" ").join("").toLowerCase();

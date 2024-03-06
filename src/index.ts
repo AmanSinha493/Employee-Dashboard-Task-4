@@ -19,15 +19,14 @@ let modal = new EmployeeModal();
 let sortTable = new SortTable();
 let exportCsv = new ExportCsv();
 
+
 document.addEventListener("DOMContentLoaded", async function () {
     async function employeeRowsJson() {
         try {
             if (!sessionStorage.getItem('employeesTableDetail')) {
-                // const response = await fetch("../json/employeesDetails.json");
                 const response = await fetch("./public/json/employeesDetails.json");
                 var employeeList = await response.json();
                 for (let i = 0; i < employeeList.length; i++) {
-                    console.log(employeeList[i])
                     storage.saveToSessionStorage(employeeList[i]);
                 }
                 window.location.reload();
@@ -44,6 +43,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     sortTable.sortEmployeeTable();
     employeeTable.disableFilterButton();
     roles.checkRoles();
+    addEmp.populateRoleOptions();
     document.querySelector('.collapse-button')?.addEventListener('click', collapse.sideBar);
     document.querySelector('.add-employee-button')?.addEventListener('click', modal.openAddEmployeeModal);
     document.querySelector('#cancel')?.addEventListener('click', employeeTable.checkForEditChanges);

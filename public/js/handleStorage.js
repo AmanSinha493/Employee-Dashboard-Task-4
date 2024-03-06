@@ -3,8 +3,7 @@ export class Storage {
     constructor() { }
     ;
     saveToSessionStorage(employee) {
-        let savedEmployees = JSON.parse(sessionStorage.getItem("employeesTableDetail") || '');
-        console.log(savedEmployees);
+        let savedEmployees = JSON.parse(sessionStorage.getItem("employeesTableDetail") || 'null');
         if (savedEmployees == null) {
             savedEmployees = [];
             savedEmployees.push(employee);
@@ -15,11 +14,11 @@ export class Storage {
         sessionStorage.setItem("employeesTableDetail", JSON.stringify(savedEmployees));
     }
     employeesDetails(key) {
-        const employees = JSON.parse(sessionStorage.getItem(key) || '');
+        const employees = JSON.parse(sessionStorage.getItem(key) || '{}');
         return employees;
     }
     getFilteredEmployees() {
-        const employees = JSON.parse(sessionStorage.getItem('FilteredEmployeesDetail') || '');
+        const employees = JSON.parse(sessionStorage.getItem('FilteredEmployeesDetail') || '{}');
         return employees;
     }
     resetFilterStorage() {
@@ -27,7 +26,7 @@ export class Storage {
         sessionStorage.setItem('FilteredEmployeesDetail', JSON.stringify(employee));
     }
     deleteFromSessionStorage(employee) {
-        let savedEmployees = JSON.parse(sessionStorage.getItem("employeesTableDetail") || '');
+        let savedEmployees = JSON.parse(sessionStorage.getItem("employeesTableDetail") || '{}');
         let selectedEmployee;
         if (employee.querySelector('.col-emp-no') != null) {
             selectedEmployee = employee.querySelector('.col-emp-no').textContent;
@@ -38,14 +37,9 @@ export class Storage {
     populateFilteredRoles(filteredRoles) {
         let roles = new Roles();
         sessionStorage.setItem('FilteredRolesDetail', JSON.stringify(filteredRoles));
-        const allRoles = JSON.parse(sessionStorage.getItem('FilteredRolesDetail') || '');
-        if (allRoles && allRoles.length > 0) {
-            allRoles.forEach((role) => {
-                roles.createRoleBlock(role);
-            });
-        }
-        else {
-            console.log('No employee data available.');
-        }
+        const allRoles = JSON.parse(sessionStorage.getItem('FilteredRolesDetail') || '{}');
+        Object.keys(allRoles).forEach(key => {
+            roles.createRoleBlock(allRoles[key], key);
+        });
     }
 }

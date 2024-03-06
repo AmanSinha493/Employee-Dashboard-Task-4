@@ -1,33 +1,34 @@
 import { EmployeeData } from "./dataType.js";
 import { Storage } from "./handleStorage.js";
-import { roleData } from "./dataType.js";
-
+import { RoleDetail } from "./dataType.js";
+import { Role } from "./dataType.js";
+import { AddEmployee } from "./handleForms.js";
 export class Roles {
     constructor() { };
-    handleViewEmployee(roleName: string) {
-        console.log(roleName);
-        let url = "role-detail.html?" + roleName;
+    handleViewEmployee(roleId: string) {
+        let url = "role-detail.html?roleId-" + roleId;
         window.open(url, "_self");
     }
-    createRoleBlock(role: roleData) {
-        let roleBlockContainer = document.getElementsByClassName('role-block-container')[0];
+
+    createRoleBlock(role: RoleDetail,roleId:keyof Role) {
+        let roleBlockContainer = document.querySelector('.role-block-container')! as HTMLDivElement;
         let roleBlock = document.createElement('div');
         roleBlock.classList.add("role-block", "flex-column");
         roleBlock.innerHTML = `
         <div class="role-heading flex">
-            <div class="role-name">${role[0]}</div>
+            <div class="role-name">${role.role}</div>
             <div class="edit-icon"><img src="../../assets/edit.svg" alt=""></div>
         </div>
         <div class="role-info-container flex-column">
             <div class="role-info flex">
                 <div><img src="../../assets/team_svgrepo.com.svg" alt=""></div>
                 <div> Department</div>
-                <div class="role-info-name">${role[1].employees[0].dept}</div>
+                <div class="role-info-name">${role.dept}</div>
             </div>
             <div class="role-info flex">
                 <div><img src="../../assets/location-pin-alt-1_svgrepo.com.svg" alt=""></div>
                 <div>Location</div>
-                <div class="role-info-name">${role[1].employees[0].location}</div>
+                <div class="role-info-name">${role.location}</div>
             </div>
             <div class="role-info flex">
                 <p> Total Employees</p>
@@ -36,7 +37,7 @@ export class Roles {
                     <img src="../../assets/admin-search.png" alt="">
                     <img src="../../assets/admin-search.png" alt="">
                     <img src="../../assets/admin-search.png" alt="">
-                    <p>${role[1].employees.length}</p>
+                    <p>${"4"}</p>
                 </div>
             </div>
         </div>`;
@@ -45,7 +46,7 @@ export class Roles {
         let viewBtn = document.createElement('button');
         viewBtn.textContent = "View all Employees";
         viewBtn.addEventListener('click', () => {
-            this.handleViewEmployee(role[0].split(' ').join('').toLowerCase());
+            this.handleViewEmployee((roleId as string).split(' ').join('').toLowerCase());
         })
         view.appendChild(viewBtn);
         const arrowIcon = document.createElement('i');
@@ -55,15 +56,12 @@ export class Roles {
         roleBlockContainer.appendChild(roleBlock);
     }
     populateRoles() {
-        const roles: roleData[] = JSON.parse(sessionStorage.getItem('rolesDetail')!);
-        if (roles && roles.length > 0) {
-            roles.forEach((role: roleData) => {
-                this.createRoleBlock(role);
-            });
-        } else {
-            console.log('No employee data available.');
-        }
+        const roles:Role = JSON.parse(sessionStorage.getItem('rolesDetail')!);
+        Object.keys(roles).forEach(key=>{
+            this.createRoleBlock(roles[key],key)
+        })
     }
+
     unpoplateRoles() {
         document.querySelector('.role-block-container')!.innerHTML = '';
     }
@@ -71,24 +69,19 @@ export class Roles {
     checkRoles() {
         let storage = new Storage();
         let employees: EmployeeData[] = storage.employeesDetails('employeesTableDetail')!;
-        let roleMap = new Map();
-        let roleIdCounter = 1;
-        let roleId;
+        let roleMap :Role={};
         for (let i = 0; i < employees.length; i++) {
-            let element = employees[i].role;
-            if (!roleMap.has(element)) {
-                roleId = "R000" + roleIdCounter++;
-                roleMap.set(element, { roleId: roleId, employees: [] });
+            let element = employees[i].roleId;
+            if (! (element! in roleMap)) {
+                let roleDetail: RoleDetail = {
+                    role: employees[i].role,
+                    location: employees[i].location,
+                    dept: employees[i].dept
+                };
+                roleMap[element!]=roleDetail;
             }
-            let roleData = roleMap.get(element);
-            roleData.employees.push(employees[i]);
-            roleMap.set(element, roleData);
         }
-        for (let i = 0; i < employees.length; i++) {
-            let element = employees[i].role;
-            employees[i].roleId = roleMap.get(element).roleId;
-        }
-        sessionStorage.setItem('rolesDetail', JSON.stringify([...roleMap]));
+        sessionStorage.setItem('rolesDetail', JSON.stringify(roleMap));
     }
 }
 
@@ -101,9 +94,8 @@ export class AddRoles {
         input = input.split(' ').join('').toLowerCase();
         let employeeList = document.querySelectorAll('.select-items>li')! as NodeListOf<any>;
         for (let i = 0; i < employeeList.length; i++) {
-
             let name = (employeeList[i]! as any).textContent.split(" ").join("").toLowerCase().trim();
-            if (!name.includes(input)) {
+            if (!name.startsWith(input)) {
                 employeeList[i].style.display = "none";
             } else {
                 employeeList[i].style.display = "";
@@ -125,6 +117,7 @@ export class AddRoles {
             employeeSelect.innerHTML += list;
         }
     }
+
     showEmployeeDropdown() {
         let employeeList = document.getElementsByClassName('select-items')[0];
         if (!employeeList.classList.contains("hide"))
@@ -132,33 +125,35 @@ export class AddRoles {
         else
             employeeList.classList.remove('hide');
     }
+    
     handleRoleSubmit(event: Event) {
+        let employee=new AddEmployee();
         let storage = new Storage();
         let role = new Roles();
         event.preventDefault();
         const form = document.getElementById("roleForm") as HTMLFormElement;
         const formData = new FormData(form);
         let allEmployees: EmployeeData[] = storage.employeesDetails('employeesTableDetail')!;
-        const roleName = formData.get("roleName")!;
-        const department = formData.get("department")!;
-        const location = formData.get("location");
+        const{roleName,department,location} = Object.fromEntries(formData);
         let employeesChecked = document.querySelectorAll(".select-items input") as NodeListOf<HTMLInputElement>;
         for (let i = 0; i < employeesChecked.length; i++) {
             if (employeesChecked[i].checked == true) {
                 let currentEmployee;
+                console.log(department);
                 let id = employeesChecked[i].getAttribute('id');
                 for (let j = 0; j < allEmployees.length; j++) {
                     if (id == allEmployees[j].empNo) {
                         allEmployees[j].role = <string>roleName;
                         allEmployees[j].dept = <string>department;
+                        allEmployees[j].location = <string>location;
+                        allEmployees[j].roleId = employee.assignRoleId(<string>roleName);
+
                         currentEmployee = allEmployees[j]
-                        console.log(allEmployees);
                     }
                 }
             }
         }
         sessionStorage.setItem("employeesTableDetail", JSON.stringify(allEmployees));
-        console.log(this);
         role.checkRoles();
         window.location.href = "./Roles.html";
     }

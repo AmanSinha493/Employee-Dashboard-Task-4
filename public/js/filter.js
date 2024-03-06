@@ -13,24 +13,6 @@ let filterIcon = document.getElementById('filter-icon');
 let allAlphabets = document.querySelector('.a-to-z-filter')?.querySelectorAll('div:not(:first-child)');
 let rows = storage.employeesDetails('employeesTableDetail');
 class checkFilters {
-    constructor() {
-        this.checkFilter = this.checkFilter.bind(this);
-    }
-    checkFilter(employee, filterType) {
-        const filterInputs = document.getElementById(`${filterType}-filter`).querySelectorAll("input");
-        const selectedFilters = [];
-        filterInputs.forEach(input => {
-            if (input.checked) {
-                const filterText = input.parentElement?.textContent?.toLowerCase().split(' ').join('');
-                selectedFilters.push(filterText);
-            }
-        });
-        if (selectedFilters.length === 0) {
-            return true;
-        }
-        const employeeFilter = employee.toLowerCase().split(' ').join('');
-        return selectedFilters.includes(employeeFilter);
-    }
     applyFilter(event) {
         let selectedFilters, filterParameters = [];
         selectedFilters = Array.from(locationInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join(''));
@@ -66,9 +48,6 @@ class checkFilters {
 }
 let checkFilter = new checkFilters();
 export class Filter {
-    constructor() {
-    }
-    ;
     resetFilter() {
         document.querySelector("#status-filter .status-dropdown").classList.add('hide');
         document.querySelector("#department-filter .department-dropdown").classList.add('hide');
@@ -113,16 +92,22 @@ export class Filter {
 }
 export class RoleFilter {
     applyRoleFilter() {
-        let roles = JSON.parse(sessionStorage.getItem('rolesDetail') || 'null');
+        let selectedFilters, filterParameters = [];
+        selectedFilters = Array.from(locationInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join(''));
+        selectedFilters.length == 0 ? filterParameters.push('location') : filterParameters.push(...selectedFilters);
+        selectedFilters = Array.from(departmentInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join(''));
+        selectedFilters.length == 0 ? filterParameters.push('department') : filterParameters.push(...selectedFilters);
+        const roles = JSON.parse(sessionStorage.getItem('rolesDetail'));
         let location, department;
-        let filteredRoles = [];
-        for (let i = 0; i < roles.length; i++) {
-            location = checkFilter.checkFilter(roles[i][1].employees[0].location, 'location');
-            department = checkFilter.checkFilter(roles[i][1].employees[0].dept, 'department');
+        let filteredRoles = {};
+        Object.keys(roles).forEach(key => {
+            let currentRole = roles[key];
+            department = filterParameters.includes(currentRole.dept.trim().toLowerCase().split(' ').join('')) || filterParameters.includes('department');
+            location = filterParameters.includes(currentRole.location.trim().toLowerCase()) || filterParameters.includes('location');
             if (location && department) {
-                filteredRoles.push(roles[i]);
+                filteredRoles[key] = currentRole;
             }
-        }
+        });
         role.unpoplateRoles();
         storage.populateFilteredRoles(filteredRoles);
     }

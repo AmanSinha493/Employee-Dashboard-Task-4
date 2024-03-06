@@ -7,15 +7,16 @@ let modal = new EmployeeModal();
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelector('.collapse-button')?.addEventListener('click', collapse.sideBar);
     let url = document.URL;
-    let roleName = url.split('?')[1];
-    const allRoles = JSON.parse(sessionStorage.getItem('rolesDetail') || 'null');
+    let roleId = url.split('-')[2];
+    const allEmployees = JSON.parse(sessionStorage.getItem('employeesTableDetail'));
     let employeesData = [];
-    for (let i = 0; i < allRoles.length; i++) {
-        if (allRoles[i][0].split(' ').join('').toLowerCase() == roleName) {
-            employeesData = allRoles[i][1].employees;
-            break;
+    const roles = JSON.parse(sessionStorage.getItem('rolesDetail'));
+    Object.keys(roles).forEach(key => {
+        if (key.split(' ').join('').toLowerCase() == roleId) {
+            employeesData = allEmployees.filter((value) => value.roleId == (key));
+            console.log(roles[key]);
         }
-    }
+    });
     populateEmployeesBlock(employeesData);
     let view = document.getElementsByClassName('view-btn');
     for (let i = 0; i < view.length; i++) {

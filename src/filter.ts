@@ -3,13 +3,12 @@ import { Populate } from './populate.js';
 import { Storage } from './handleStorage.js';
 import { EmployeeTable } from './employeeTable.js';
 import { Roles } from './handleRoles.js';
-import { roleData } from './dataType.js';
-
+import { Role } from './dataType.js';
+import { RoleDetail } from './dataType.js';
 let employeeTable = new EmployeeTable();
 let populate = new Populate();
 let storage = new Storage()
 let role = new Roles();
-
 let locationInputs = document.getElementById(`location-filter`)!.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
 let statusInputs = document.getElementById(`status-filter`)?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
 let departmentInputs = document.getElementById(`department-filter`)!.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
@@ -18,24 +17,7 @@ let allAlphabets = (document.querySelector('.a-to-z-filter') as HTMLElement)?.qu
 let rows = storage.employeesDetails('employeesTableDetail')!;
 
 class checkFilters {
-    constructor() {
-        this.checkFilter = this.checkFilter.bind(this);
-    }
-    checkFilter(employee: string, filterType: string): boolean {
-        const filterInputs = document.getElementById(`${filterType}-filter`)!.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
-        const selectedFilters: string[] = [];
-        filterInputs.forEach(input => {
-            if (input.checked) {
-                const filterText = input.parentElement?.textContent?.toLowerCase().split(' ').join('')!;
-                selectedFilters.push(filterText);
-            }
-        });
-        if (selectedFilters.length === 0) {
-            return true;
-        }
-        const employeeFilter = employee.toLowerCase().split(' ').join('');
-        return selectedFilters.includes(employeeFilter);
-    }
+
     applyFilter(event: HTMLElement) {
         let selectedFilters: string[], filterParameters: string[] = [];
         selectedFilters = Array.from(locationInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join('')!);
@@ -70,10 +52,7 @@ class checkFilters {
     }
 }
 let checkFilter = new checkFilters();
-
 export class Filter {
-    constructor() {
-    };
     resetFilter(): void {
         (document.querySelector("#status-filter .status-dropdown")! as HTMLElement).classList.add('hide');
         (document.querySelector("#department-filter .department-dropdown")! as HTMLElement).classList.add('hide');
@@ -114,21 +93,26 @@ export class Filter {
             });
         });
     }
-
 }
 
 export class RoleFilter {
     applyRoleFilter(): void {
-        let roles: roleData[] = JSON.parse(sessionStorage.getItem('rolesDetail') || 'null')
+        let selectedFilters: string[], filterParameters: string[] = [];
+        selectedFilters = Array.from(locationInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join('')!);
+        selectedFilters.length == 0 ? filterParameters.push('location') : filterParameters.push(...selectedFilters);
+        selectedFilters = Array.from(departmentInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join('')!);
+        selectedFilters.length == 0 ? filterParameters.push('department') : filterParameters.push(...selectedFilters);
+        const roles:Role = JSON.parse(sessionStorage.getItem('rolesDetail')!);
         let location, department;
-        let filteredRoles: roleData[] = [];
-        for (let i = 0; i < roles.length; i++) {
-            location = checkFilter.checkFilter(roles[i][1].employees[0].location, 'location');
-            department = checkFilter.checkFilter(roles[i][1].employees[0].dept, 'department');
+        let filteredRoles: Role = {};
+        Object.keys(roles).forEach(key=>{
+            let currentRole:RoleDetail=roles[key];
+            department = filterParameters.includes(currentRole.dept.trim().toLowerCase().split(' ').join('')) || filterParameters.includes('department');
+            location = filterParameters.includes(currentRole.location.trim().toLowerCase()) || filterParameters.includes('location');
             if (location && department) {
-                filteredRoles.push(roles[i]);
+                filteredRoles[key]=currentRole;
             }
-        }
+        })
         role.unpoplateRoles();
         storage.populateFilteredRoles(filteredRoles);
     }

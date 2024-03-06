@@ -2,7 +2,7 @@ import { EmployeeData } from "./dataType";
 import { AddEmployee } from "./handleForms.js";
 import { Collapse } from "./employeeTable.js";
 import { EmployeeModal } from "./handleForms.js";
-import { roleData } from "./dataType";
+import { Role } from "./dataType";
 let addEmp= new AddEmployee();
 let collapse=new Collapse();
 let modal=new EmployeeModal();
@@ -10,15 +10,16 @@ let modal=new EmployeeModal();
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelector('.collapse-button')?.addEventListener( 'click',collapse.sideBar);
     let url = document.URL;
-    let roleName = url.split('?')[1];
-    const allRoles:roleData[] =  JSON.parse(sessionStorage.getItem('rolesDetail') || 'null')
+    let roleId = url.split('-')[2];
+    const allEmployees:EmployeeData[] =  JSON.parse(sessionStorage.getItem('employeesTableDetail')!);
     let employeesData:EmployeeData[] = []
-    for (let i = 0; i < allRoles!.length; i++) {
-        if (allRoles[i][0].split(' ').join('').toLowerCase() == roleName) {
-            employeesData = allRoles[i][1].employees;
-            break;
-        }
-    }
+    const roles:Role = JSON.parse(sessionStorage.getItem('rolesDetail')!);
+        Object.keys(roles).forEach(key=>{
+            if (key.split(' ').join('').toLowerCase() == roleId) {
+                        employeesData = allEmployees.filter((value)=> value.roleId==(key));
+                        console.log(roles[key]);
+                    }
+        })
     populateEmployeesBlock(employeesData);
     let view = document.getElementsByClassName('view-btn');
     for (let i = 0; i < view.length; i++) {

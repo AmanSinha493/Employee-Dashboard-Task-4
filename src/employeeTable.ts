@@ -3,8 +3,9 @@ import { Populate } from './populate.js';
 import { Storage } from './handleStorage.js';
 import { AddEmployee } from "./handleForms.js";
 import { EmployeeModal } from "./handleForms.js";
+// import { Role } from './dataType.js';
 
-let storage = new Storage();
+
 
 export class Collapse {
     public isCollapsed: boolean = true;
@@ -56,14 +57,14 @@ export class EmployeeTable {
         let table = document.querySelector(".employee-table tbody")! as HTMLTableElement;
         for (let i = 0; i < table.rows.length; i++) {
             let row = table.rows[i]! as HTMLTableRowElement;
-            let name = row.cells[1].textContent;
-            if (name != null) {
-                name = name.split(" ").join("").toLowerCase().trim();
-                if (!name.startsWith(searchInput)) {
-                    row.style.display = "none";
-                } else {
-                    row.style.display = "";
-                }
+            let name = row.cells[1].textContent!.toLowerCase();
+            let location = row.cells[2].textContent!.toLowerCase();
+            let dept = row.cells[3].textContent!.toLowerCase();
+            let role = row.cells[4].textContent!.toLowerCase();
+            if (name.includes(searchInput) || location.includes(searchInput) || dept.includes(searchInput) || role.includes(searchInput)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
             }
         }
     }
@@ -90,7 +91,6 @@ export class EmployeeTable {
     }
 
     selectFilter(this: any, event: Event) {
-        console.log(event);
         let checkbox = this.querySelector('input');
         const element = event.target;
         if (element == checkbox)
@@ -141,37 +141,52 @@ export class EmployeeTable {
     checkForEditChanges(event: Event) {
         let addEmp = new AddEmployee();
         let modal = new EmployeeModal();
-        let button = event.currentTarget! as HTMLButtonElement;
-        if (button.classList.contains('edit')) {
-            let x = this.checkForChanges(event);
-            if (!x)
-                modal.closeAddEmployeeModal();
-            else
-                addEmp.openEditConfirmation();
-        }
-        else
+        let x = this.checkForChanges(event);
+        if (!x)
             modal.closeAddEmployeeModal();
+        else
+            addEmp.openEditConfirmation();
     }
 
     checkForChanges(event: Event): boolean {
+        let storage = new Storage();
+        console.log(this);
+        console.log(event.currentTarget);
         event.preventDefault();
         const employees: EmployeeData[] = storage.employeesDetails('employeesTableDetail')!;
         const form = document.getElementById("employeeForm") as HTMLFormElement;
         const formData = new FormData(form);
         const { empNo, firstName, lastName, email, joiningDate, location, jobTitle, department, mobileNumber } = Object.fromEntries(formData);
-        const employee: EmployeeData | undefined = employees.find(emp => emp.empNo === empNo);
-        if (!employee)
+        console.log({ empNo, firstName, lastName, email, joiningDate, location, jobTitle, department, mobileNumber });
+        const employee: EmployeeData | undefined = employees.find(emp => emp.empNo === empNo)!;
+        let changesDetected: boolean = false
+
+        if (((event.currentTarget as HTMLElement).classList.contains('edit') && !employee) || ((event.currentTarget as HTMLElement).classList.contains('view')))
             return false;
-        const changesDetected = (
-            firstName !== employee.name.split(' ')[0] ||
-            lastName !== employee.name.split(' ').slice(1).join(' ') ||
-            email !== employee.email ||
-            (joiningDate as string).split('-').reverse().join('/') !== employee.joinDate ||
-            location !== employee.location ||
-            jobTitle !== employee.role ||
-            department !== employee.dept ||
-            mobileNumber !== employee.mobile
-        );
+        else if ((event.currentTarget as HTMLElement).classList.contains('edit')) {
+            changesDetected = (
+                firstName !== employee.name.split(' ')[0] ||
+                lastName !== employee.name.split(' ').slice(1).join(' ') ||
+                email !== employee.email ||
+                (joiningDate as string).split('-').reverse().join('/') !== employee.joinDate ||
+                location !== employee.location ||
+                jobTitle !== employee.role ||
+                department !== employee.dept ||
+                mobileNumber !== employee.mobile
+            );
+        }
+        else {
+            changesDetected = (
+                firstName !== "" ||
+                lastName !== "" ||
+                email !== "" ||
+                (joiningDate as string).split('-').reverse().join('/') !== "" ||
+                location !== "" ||
+                jobTitle !== "" ||
+                department !== "" ||
+                mobileNumber !== ""
+            );
+        }
         return changesDetected;
     }
 }
@@ -181,6 +196,8 @@ export class ExportCsv {
         this.tableToCSV = this.tableToCSV.bind(this);
     };
     tableToCSV(): void {
+        let storage = new Storage();
+
         let employees: EmployeeData[] = storage.employeesDetails('FilteredEmployeesDetail')!;
         let csvContent = this.arrayToCSV(employees);
         this.downloadCSVFile(csvContent);
@@ -218,6 +235,7 @@ export class SortTable {
         }
     }
     sortColumn(this: any, column: HTMLTableColElement) {
+        let storage = new Storage();
         let populate = new Populate();
         let employees: EmployeeData[] = storage.employeesDetails('employeesTableDetail')!;
         let value = column.textContent?.trim().split(" ").join("").toLowerCase();

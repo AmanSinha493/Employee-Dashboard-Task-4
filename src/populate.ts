@@ -3,7 +3,6 @@ import { Storage } from './handleStorage.js';
 import { AddEmployee } from './handleForms.js';
 import { EmployeeTable } from './employeeTable.js';
 
-let storage = new Storage()
 
 export class Populate {
     private addEmployee = new AddEmployee();
@@ -123,6 +122,8 @@ export class Populate {
     }
 
     deleteRow() {
+let storage = new Storage()
+
         const table = document.querySelector("#employee-table")!;
         var rows = table.getElementsByTagName('tr');
         var checkbox = document.querySelectorAll('.check-box-col input') as NodeListOf<HTMLInputElement>;

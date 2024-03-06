@@ -12,11 +12,15 @@ export type EmployeeData ={
     joinDate: string
 };
 
-export type roleData = [string,
-    {
-        employees: EmployeeData[],
-        roleId: string
-    }
-];
+export interface RoleDetail 
+{
+    role: string,
+    location:string,
+    dept:string
+};
+
+export interface Role {
+[key: string]: RoleDetail
+}
 
 

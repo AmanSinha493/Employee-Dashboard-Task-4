@@ -2,14 +2,14 @@ import { EmployeeData } from './dataType.js';
 import { Populate } from "./populate.js";
 import { Storage } from './handleStorage.js';
 import { EmployeeTable } from './employeeTable.js';
+import { Role } from './dataType.js';
 
-let storage = new Storage();
-let populate: Populate;
-async function initiaize() {
-    let p = await import("./populate.js");
-    populate = new p.Populate();
-}
-initiaize();
+// let populate: Populate;
+// async function initiaize() {
+//     let p = await import("./populate.js");
+//     populate = new p.Populate();
+// }
+// initiaize();
 
 export class EmployeeModal {
     constructor() {
@@ -26,22 +26,20 @@ export class EmployeeModal {
             this.showValidInput(element, "");
             element.disabled = false;
         });
-       (document.getElementById('empNo') as HTMLInputElement).readOnly = false;
+        (document.getElementById('empNo') as HTMLInputElement).readOnly = false;
         (document.getElementById('profileImagePreview')! as HTMLImageElement).src = "./assets/add-employee-default-user.svg";
         let submitBtn = (document.querySelector('#submitButton')! as HTMLButtonElement);
         submitBtn.style.display = "";
         submitBtn.textContent = "Add Employee";
         (document.querySelector('#cancel')! as HTMLButtonElement).textContent = "Cancel";
+        (document.querySelector('#cancel')! as HTMLButtonElement).className = "";
         (document.getElementsByClassName('upload-profile-pic-btn')[0]! as HTMLButtonElement).style.display = '';
         (document.getElementsByClassName('upload-profile-pic-btn')[0]! as HTMLButtonElement).disabled = false;
         document.getElementsByClassName('add-employee-form')[0].classList.remove('show-addEmployee-form');
-        if (location.href.includes("index.html")) {
-            populate.unpopulateTable();
-            populate.populateTable();
-        }
+        document.querySelector('.add-employee-form h1')!.textContent = "Add Employee";
     }
     showValidInput(element: HTMLElement, message: string): void {
-        element.style.outlineColor = "red";
+        // element.style.outlineColor = "red";
         let parentDiv = element.parentElement;
         let span = parentDiv?.querySelector('span');
         if (span) {
@@ -66,9 +64,10 @@ export class AddEmployee {
     }
 
     checkValidation(event: Event) {
+        let populate=new Populate();
         event.preventDefault();
         const editflag: boolean = (document.querySelector('#submitButton') as HTMLElement).textContent!.toLowerCase().split(' ').join('') !== "addemployee";
-        const employees: EmployeeData[] | null = storage.employeesDetails('employeesTableDetail'); // replace any with the actual type
+        const employees:EmployeeData[] = JSON.parse(sessionStorage.getItem('employeesTableDetail')!);
         const form: HTMLFormElement = document.getElementById("employeeForm") as HTMLFormElement;
         const formInput: NodeListOf<HTMLInputElement> = form.querySelectorAll('input:not([name="dob"])');
         const formSelect: NodeListOf<HTMLSelectElement> = form.querySelectorAll('select');
@@ -125,10 +124,7 @@ export class AddEmployee {
                 case 'joiningDate':
                     const currentDate = new Date();
                     const currentYear = currentDate.getFullYear();
-                    const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, '0');
                     const currentDay = currentDate.getDate().toString().padStart(2, '0');
-                    const currentDateFormatted = parseInt(`${currentYear}${currentMonth}${currentDay}`);
-
                     const inputDateParts = element.value.split('-');
                     if (element.value === "") {
                         this.modal.showValidInput(element, `&#9888; This is a required field`);
@@ -161,19 +157,22 @@ export class AddEmployee {
         }
         if (!flag) return;
         if (editflag) {
-            this.updateEmployee((document.getElementById('empNo') as HTMLInputElement).value,event);
+            this.updateEmployee((document.getElementById('empNo') as HTMLInputElement).value, event);
         } else {
-            this.handleFormSubmit();
+            this.handleFormSubmit(event);
         }
         if (location.href.includes("index.html")) {
-            populate.unpopulateTable();
-            populate.populateTable();
+            setTimeout(function () {
+                populate.unpopulateTable();
+                populate.populateTable();
+            }, 200);
         }
     }
 
     editEmployeeForm(this: any) {
         document.querySelector('.add-employee-form')!.classList.add('show-addEmployee-form');
-        const employees = storage.employeesDetails('employeesTableDetail')!;
+        document.querySelector('.add-employee-form h1')!.textContent = "Edit Employee";
+        const employees:EmployeeData[] = JSON.parse(sessionStorage.getItem('employeesTableDetail')!);
         let employee: EmployeeData;
         if (this.textContent.toLowerCase() == 'view') {
             let currentRow = this.parentNode.querySelector('.employee-info-container>:first-child').textContent.trim();
@@ -201,22 +200,45 @@ export class AddEmployee {
         const submitButton = document.querySelector('#submitButton') as HTMLButtonElement;
         if (this.textContent.toLowerCase() != "edit") {
             submitButton.style.display = "none";
+            (document.querySelector('#cancel')! as HTMLButtonElement).classList.add('view');
             (document.querySelector('#cancel')! as HTMLButtonElement).textContent = "Close";
             const inputs = document.querySelectorAll('#employeeForm input, #employeeForm select') as NodeListOf<HTMLInputElement>;
             inputs.forEach(input => input.disabled = true);
             (document.querySelector('.upload-profile-pic-btn') as HTMLButtonElement).style.display = 'none';
+            document.querySelector('.add-employee-form h1')!.textContent = "Employee Detail";
         } else {
             (document.querySelector('#cancel')! as HTMLButtonElement).classList.add('edit');
             submitButton.textContent = "Apply Changes";
         }
     }
-
-    handleFormSubmit(): void {
+    populateRoleOptions(){
+        let roles=JSON.parse(sessionStorage.getItem('rolesDetail')!);
+        Object.keys(roles).forEach(key => {
+            let option = document.createElement("option");
+            option.text = roles[key].role;
+            option.value = roles[key].role;
+            document.getElementById('jobTitle')!.appendChild(option);
+        })
+    }
+    assignRoleId(roleName: string): string {
+        const roles: Role = JSON.parse(sessionStorage.getItem('rolesDetail')!);
+        let roleId = "";
+        Object.keys(roles).forEach(key => {
+            if (roleName == roles[key].role)
+                roleId = key;
+        })
+        if(roleId == "")
+            roleId=`R00${Object.keys(roles).length+1}`;
+        return roleId
+    }
+    handleFormSubmit(event:Event): void {
+        let storage = new Storage();
         let empTable = new EmployeeTable();
         const form = document.querySelector("#employeeForm") as HTMLFormElement;
         const formData = new FormData(form);
         const { empNo, firstName, lastName, email, joiningDate, location, jobTitle, department, mobileNumber } = Object.fromEntries(formData);
         const profileImageFile = (formData.get("profileImage") as File || undefined);
+        // let checkChanges = empTable.checkForChanges(event);
         const name = `${firstName} ${lastName}`;
         let newEmployeeDetails: EmployeeData = {
             "dept": <string>department,
@@ -226,6 +248,7 @@ export class AddEmployee {
             "joinDate": (joiningDate as string).split('-').reverse().join('/'),
             "location": <string>location,
             "mobile": <string>mobileNumber,
+            "roleId": this.assignRoleId(<string>jobTitle),
             "name": <string>name,
             "role": <string>jobTitle,
             "status": "Active"
@@ -241,26 +264,27 @@ export class AddEmployee {
             storage.saveToSessionStorage(newEmployeeDetails);
         }
         form.reset();
-        // alert("Employee data has been stored !");
         this.modal.closeAddEmployeeModal();
         empTable.showToaster("Employee Added");
     }
 
-    updateEmployee(id: string | number,event:Event): void {
+    updateEmployee(id: string | number, event: Event): void {
         let empTable = new EmployeeTable();
-        const employees: EmployeeData[] = storage.employeesDetails('employeesTableDetail')!;
+        // const employees: EmployeeData[] = storage.employeesDetails('employeesTableDetail')!;
+        const employees:EmployeeData[] = JSON.parse(sessionStorage.getItem('employeesTableDetail')!);
         const employee: EmployeeData | undefined = employees.find(emp => emp.empNo == id);
         if (!employee) return;
         const form = document.getElementById("employeeForm") as HTMLFormElement;
         const formData = new FormData(form);
         const { firstName, lastName, email, joiningDate, location, jobTitle, department, mobileNumber } = Object.fromEntries(formData);
-        let checkChanges=empTable.checkForChanges(event);
+        let checkChanges = empTable.checkForChanges(event);
         employee.email = <string>email;
         employee.location = <string>location;
         employee.role = <string>jobTitle;
         employee.dept = <string>department;
         employee.name = `${firstName} ${lastName}`;
         employee.mobile = <string>mobileNumber;
+        employee.roleId= this.assignRoleId(<string>jobTitle);
         employee.joinDate = (joiningDate as string).split('-').reverse().join('/');
         const profileImageFile = formData.get("profileImage") as File;
         if (profileImageFile.name !== '') {
@@ -273,7 +297,7 @@ export class AddEmployee {
         }
         sessionStorage.setItem('employeesTableDetail', JSON.stringify(employees));
         this.modal.closeAddEmployeeModal();
-        if(checkChanges)
+        if (checkChanges)
             empTable.showToaster("Employee Updated");
     }
     openEditConfirmation(): void {
