@@ -3,42 +3,46 @@ import { AddEmployee } from "./handleForms.js";
 import { Collapse } from "./employeeTable.js";
 import { EmployeeModal } from "./handleForms.js";
 import { Role } from "./dataType";
-let addEmp= new AddEmployee();
-let collapse=new Collapse();
-let modal=new EmployeeModal();
+let addEmp = new AddEmployee();
+let collapse = new Collapse();
+let modal = new EmployeeModal();
 
 document.addEventListener("DOMContentLoaded", function () {
-    document.querySelector('.collapse-button')?.addEventListener( 'click',collapse.sideBar);
+    document.querySelector('.collapse-button')?.addEventListener('click', collapse.sideBar);
     let url = document.URL;
     let roleId = url.split('-')[2];
-    const allEmployees:EmployeeData[] =  JSON.parse(sessionStorage.getItem('employeesTableDetail')!);
-    let employeesData:EmployeeData[] = []
-    const roles:Role = JSON.parse(sessionStorage.getItem('rolesDetail')!);
-        Object.keys(roles).forEach(key=>{
-            if (key.split(' ').join('').toLowerCase() == roleId) {
-                        employeesData = allEmployees.filter((value)=> value.roleId==(key));
-                        console.log(roles[key]);
-                    }
-        })
+    const allEmployees: EmployeeData[] = JSON.parse(sessionStorage.getItem('employeesTableDetail')!);
+    let employeesData: EmployeeData[] = []
+    const roles: Role[] = JSON.parse(sessionStorage.getItem('rolesDetail')!);
+    roles.forEach(role => {
+        if (role.roleId.split(' ').join('').toLowerCase() == roleId) {
+            employeesData = allEmployees.filter((value) => value.roleId == (role.roleId));
+        }
+    });
+    // Object.keys(roles).forEach(key => {
+    //     if (key.split(' ').join('').toLowerCase() == roleId) {
+    //         employeesData = allEmployees.filter((value) => value.roleId == (key));
+    //     }
+    // })
     populateEmployeesBlock(employeesData);
     let view = document.getElementsByClassName('view-btn');
     for (let i = 0; i < view.length; i++) {
-        view[i].addEventListener('click',addEmp.editEmployeeForm);
+        view[i].addEventListener('click', addEmp.editEmployeeForm);
     }
     let uploadProfilePic = document.getElementById('profileImageInput')!;
     uploadProfilePic.addEventListener('change', addEmp.displayImagePreview);
     const addEmployeeForm = document.getElementsByClassName('add-employee-form')[0];
     addEmployeeForm.addEventListener("submit", addEmp.checkValidation);
-    document.querySelector('.add-employee-button')?.addEventListener( 'click',modal.openAddEmployeeModal);
-    document.querySelector('#cancel')?.addEventListener( 'click',modal.closeAddEmployeeModal);
+    document.querySelector('.add-employee-button')?.addEventListener('click', modal.openAddEmployeeModal);
+    document.querySelector('#cancel')?.addEventListener('click', modal.closeAddEmployeeModal);
 });
 
-function populateEmployeesBlock(employeesData:EmployeeData[]) {
+function populateEmployeesBlock(employeesData: EmployeeData[]) {
     for (let i = 0; i < employeesData.length; i++) {
         createEmployeeBlock(employeesData[i]);
     }
 }
-function createEmployeeBlock(employee:EmployeeData) {
+function createEmployeeBlock(employee: EmployeeData) {
     let employeeBlockContainer = document.getElementsByClassName('employee-block-container')[0];
     let employeeBlock = document.createElement('div');
     employeeBlock.classList.add("employee-block", "flex-column");

@@ -1,12 +1,6 @@
 import { Populate } from "./populate.js";
 import { Storage } from './handleStorage.js';
 import { EmployeeTable } from './employeeTable.js';
-// let populate: Populate;
-// async function initiaize() {
-//     let p = await import("./populate.js");
-//     populate = new p.Populate();
-// }
-// initiaize();
 export class EmployeeModal {
     constructor() {
         this.closeAddEmployeeModal = this.closeAddEmployeeModal.bind(this);
@@ -24,6 +18,7 @@ export class EmployeeModal {
             element.disabled = false;
         });
         document.getElementById('empNo').readOnly = false;
+        document.getElementById('empNo').style.outline = "";
         document.getElementById('profileImagePreview').src = "./assets/add-employee-default-user.svg";
         let submitBtn = document.querySelector('#submitButton');
         submitBtn.style.display = "";
@@ -195,6 +190,7 @@ export class AddEmployee {
         const selectedEmpJoinDate = employee.joinDate.split('/').reverse().join('-');
         document.getElementById('empNo').value = employee.empNo;
         document.getElementById('empNo').readOnly = true;
+        document.getElementById('empNo').style.outline = "none";
         document.getElementById('firstName').value = nameParts[0];
         document.getElementById('lastName').value = nameParts.slice(1).join(' ');
         document.getElementById('email').value = employee.email;
@@ -231,9 +227,14 @@ export class AddEmployee {
     assignRoleId(roleName) {
         const roles = JSON.parse(sessionStorage.getItem('rolesDetail'));
         let roleId = "";
-        Object.keys(roles).forEach(key => {
-            if (roleName == roles[key].role)
-                roleId = key;
+        // Object.keys(roles).forEach(key => {
+        //     if (roleName == roles[key].role)
+        //         roleId = key;
+        // })
+        roles.forEach((r) => {
+            if (roleName === r.role) {
+                roleId = r.roleId;
+            }
         });
         if (roleId == "")
             roleId = `R00${Object.keys(roles).length + 1}`;
@@ -246,7 +247,6 @@ export class AddEmployee {
         const formData = new FormData(form);
         const { empNo, firstName, lastName, email, joiningDate, location, jobTitle, department, mobileNumber } = Object.fromEntries(formData);
         const profileImageFile = (formData.get("profileImage") || undefined);
-        // let checkChanges = empTable.checkForChanges(event);
         const name = `${firstName} ${lastName}`;
         let newEmployeeDetails = {
             "dept": department,
@@ -278,7 +278,6 @@ export class AddEmployee {
     }
     updateEmployee(id, event) {
         let empTable = new EmployeeTable();
-        // const employees: EmployeeData[] = storage.employeesDetails('employeesTableDetail')!;
         const employees = JSON.parse(sessionStorage.getItem('employeesTableDetail'));
         const employee = employees.find(emp => emp.empNo == id);
         if (!employee)

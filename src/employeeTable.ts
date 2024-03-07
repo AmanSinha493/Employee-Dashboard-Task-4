@@ -3,9 +3,6 @@ import { Populate } from './populate.js';
 import { Storage } from './handleStorage.js';
 import { AddEmployee } from "./handleForms.js";
 import { EmployeeModal } from "./handleForms.js";
-// import { Role } from './dataType.js';
-
-
 
 export class Collapse {
     public isCollapsed: boolean = true;

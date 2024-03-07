@@ -11,12 +11,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const allEmployees = JSON.parse(sessionStorage.getItem('employeesTableDetail'));
     let employeesData = [];
     const roles = JSON.parse(sessionStorage.getItem('rolesDetail'));
-    Object.keys(roles).forEach(key => {
-        if (key.split(' ').join('').toLowerCase() == roleId) {
-            employeesData = allEmployees.filter((value) => value.roleId == (key));
-            console.log(roles[key]);
+    roles.forEach(role => {
+        if (role.roleId.split(' ').join('').toLowerCase() == roleId) {
+            employeesData = allEmployees.filter((value) => value.roleId == (role.roleId));
         }
     });
+    // Object.keys(roles).forEach(key => {
+    //     if (key.split(' ').join('').toLowerCase() == roleId) {
+    //         employeesData = allEmployees.filter((value) => value.roleId == (key));
+    //     }
+    // })
     populateEmployeesBlock(employeesData);
     let view = document.getElementsByClassName('view-btn');
     for (let i = 0; i < view.length; i++) {

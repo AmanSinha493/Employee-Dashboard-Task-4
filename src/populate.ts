@@ -122,7 +122,7 @@ export class Populate {
     }
 
     deleteRow() {
-let storage = new Storage()
+        let storage = new Storage()
 
         const table = document.querySelector("#employee-table")!;
         var rows = table.getElementsByTagName('tr');

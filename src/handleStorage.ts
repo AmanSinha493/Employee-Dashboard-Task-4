@@ -39,12 +39,16 @@ export class Storage {
         savedEmployees = savedEmployees.filter((savedEmployee) => savedEmployee.empNo != selectedEmployee);
         sessionStorage.setItem("employeesTableDetail", JSON.stringify(savedEmployees));
     }
-    populateFilteredRoles(filteredRoles: Role) {
+    populateFilteredRoles(filteredRoles: Role[]) {
         let roles = new Roles();
         sessionStorage.setItem('FilteredRolesDetail', JSON.stringify(filteredRoles));
-        const allRoles = JSON.parse(sessionStorage.getItem('FilteredRolesDetail') || '{}')
-        Object.keys(allRoles).forEach(key=>{
-            roles.createRoleBlock(allRoles[key],key)
+        const allRoles = JSON.parse(sessionStorage.getItem('FilteredRolesDetail') || '{}');
+        allRoles.forEach((role: Role) => {
+            roles.createRoleBlock(role)
+
         })
+        // Object.keys(allRoles).forEach(key => {
+        //     roles.createRoleBlock(allRoles[key], key)
+        // })
     }
 }

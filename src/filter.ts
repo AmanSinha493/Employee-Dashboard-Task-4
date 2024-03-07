@@ -4,7 +4,7 @@ import { Storage } from './handleStorage.js';
 import { EmployeeTable } from './employeeTable.js';
 import { Roles } from './handleRoles.js';
 import { Role } from './dataType.js';
-import { RoleDetail } from './dataType.js';
+// import { RoleDetail } from './dataType.js';
 let employeeTable = new EmployeeTable();
 let populate = new Populate();
 let storage = new Storage()
@@ -102,17 +102,24 @@ export class RoleFilter {
         selectedFilters.length == 0 ? filterParameters.push('location') : filterParameters.push(...selectedFilters);
         selectedFilters = Array.from(departmentInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join('')!);
         selectedFilters.length == 0 ? filterParameters.push('department') : filterParameters.push(...selectedFilters);
-        const roles:Role = JSON.parse(sessionStorage.getItem('rolesDetail')!);
+        const roles: Role[] = JSON.parse(sessionStorage.getItem('rolesDetail')!);
         let location, department;
-        let filteredRoles: Role = {};
-        Object.keys(roles).forEach(key=>{
-            let currentRole:RoleDetail=roles[key];
-            department = filterParameters.includes(currentRole.dept.trim().toLowerCase().split(' ').join('')) || filterParameters.includes('department');
-            location = filterParameters.includes(currentRole.location.trim().toLowerCase()) || filterParameters.includes('location');
-            if (location && department) {
-                filteredRoles[key]=currentRole;
-            }
-        })
+        let filteredRoles: Role[] = [];
+        // Object.keys(roles).forEach(key => {
+        //     let currentRole: RoleDetail = roles[key];
+        //     department = filterParameters.includes(currentRole.dept.trim().toLowerCase().split(' ').join('')) || filterParameters.includes('department');
+        //     location = filterParameters.includes(currentRole.location.trim().toLowerCase()) || filterParameters.includes('location');
+        //     if (location && department) {
+        //         filteredRoles[key] = currentRole;
+        //     }
+        // })
+        roles.forEach((role)=>{
+                department = filterParameters.includes(role.dept.trim().toLowerCase().split(' ').join('')) || filterParameters.includes('department');
+                location = filterParameters.includes(role.location.trim().toLowerCase()) || filterParameters.includes('location');
+                if (location && department) {
+                    filteredRoles.push(role);
+                }
+        }) 
         role.unpoplateRoles();
         storage.populateFilteredRoles(filteredRoles);
     }

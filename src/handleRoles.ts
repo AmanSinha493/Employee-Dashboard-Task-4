@@ -1,6 +1,5 @@
 import { EmployeeData } from "./dataType.js";
 import { Storage } from "./handleStorage.js";
-import { RoleDetail } from "./dataType.js";
 import { Role } from "./dataType.js";
 import { AddEmployee } from "./handleForms.js";
 export class Roles {
@@ -10,10 +9,12 @@ export class Roles {
         window.open(url, "_self");
     }
 
-    createRoleBlock(role: RoleDetail,roleId:keyof Role) {
+    createRoleBlock(role: Role) {
         let roleBlockContainer = document.querySelector('.role-block-container')! as HTMLDivElement;
         let roleBlock = document.createElement('div');
         roleBlock.classList.add("role-block", "flex-column");
+        const allEmployees: EmployeeData[] = JSON.parse(sessionStorage.getItem('employeesTableDetail')!);
+        let employeesData: EmployeeData[] = allEmployees.filter((value) => value.roleId == (role.roleId));
         roleBlock.innerHTML = `
         <div class="role-heading flex">
             <div class="role-name">${role.role}</div>
@@ -37,7 +38,7 @@ export class Roles {
                     <img src="../../assets/admin-search.png" alt="">
                     <img src="../../assets/admin-search.png" alt="">
                     <img src="../../assets/admin-search.png" alt="">
-                    <p>${"4"}</p>
+                    <p>${employeesData.length}</p>
                 </div>
             </div>
         </div>`;
@@ -46,7 +47,7 @@ export class Roles {
         let viewBtn = document.createElement('button');
         viewBtn.textContent = "View all Employees";
         viewBtn.addEventListener('click', () => {
-            this.handleViewEmployee((roleId as string).split(' ').join('').toLowerCase());
+            this.handleViewEmployee((role.roleId as string).split(' ').join('').toLowerCase());
         })
         view.appendChild(viewBtn);
         const arrowIcon = document.createElement('i');
@@ -56,9 +57,9 @@ export class Roles {
         roleBlockContainer.appendChild(roleBlock);
     }
     populateRoles() {
-        const roles:Role = JSON.parse(sessionStorage.getItem('rolesDetail')!);
-        Object.keys(roles).forEach(key=>{
-            this.createRoleBlock(roles[key],key)
+        const roles: Role[] = JSON.parse(sessionStorage.getItem('rolesDetail')!);
+        roles.forEach(role => {
+            this.createRoleBlock(role)
         })
     }
 
@@ -69,19 +70,22 @@ export class Roles {
     checkRoles() {
         let storage = new Storage();
         let employees: EmployeeData[] = storage.employeesDetails('employeesTableDetail')!;
-        let roleMap :Role={};
+        let roles: Role[] = [];
+        let roleMap = new Map();
         for (let i = 0; i < employees.length; i++) {
             let element = employees[i].roleId;
-            if (! (element! in roleMap)) {
-                let roleDetail: RoleDetail = {
+            if (!roleMap.has(element)) {
+                let roleDetail: Role = {
+                    roleId: employees[i].roleId!,
                     role: employees[i].role,
                     location: employees[i].location,
                     dept: employees[i].dept
                 };
-                roleMap[element!]=roleDetail;
+                roleMap.set(element, '')
+                roles.push(roleDetail);
             }
         }
-        sessionStorage.setItem('rolesDetail', JSON.stringify(roleMap));
+        sessionStorage.setItem('rolesDetail', JSON.stringify(roles));
     }
 }
 
@@ -109,7 +113,7 @@ export class AddRoles {
         let employeeSelect = document.getElementsByClassName('select-items')[0];
         for (let i = 0; i < employees.length; i++) {
             let list =
-            `<li class="flex">
+                `<li class="flex">
                 <div class="assign-employee-profile-option"><img src="${employees[i].img}">
                 <p>${employees[i].name}</p>
                 </div><input type="checkbox" id="${employees[i].empNo}" value="${employees[i].name}">
@@ -125,16 +129,15 @@ export class AddRoles {
         else
             employeeList.classList.remove('hide');
     }
-    
     handleRoleSubmit(event: Event) {
-        let employee=new AddEmployee();
+        let employee = new AddEmployee();
         let storage = new Storage();
         let role = new Roles();
         event.preventDefault();
         const form = document.getElementById("roleForm") as HTMLFormElement;
         const formData = new FormData(form);
         let allEmployees: EmployeeData[] = storage.employeesDetails('employeesTableDetail')!;
-        const{roleName,department,location} = Object.fromEntries(formData);
+        const { roleName, department, location } = Object.fromEntries(formData);
         let employeesChecked = document.querySelectorAll(".select-items input") as NodeListOf<HTMLInputElement>;
         for (let i = 0; i < employeesChecked.length; i++) {
             if (employeesChecked[i].checked == true) {

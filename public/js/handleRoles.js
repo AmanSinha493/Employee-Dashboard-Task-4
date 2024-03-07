@@ -7,10 +7,12 @@ export class Roles {
         let url = "role-detail.html?roleId-" + roleId;
         window.open(url, "_self");
     }
-    createRoleBlock(role, roleId) {
+    createRoleBlock(role) {
         let roleBlockContainer = document.querySelector('.role-block-container');
         let roleBlock = document.createElement('div');
         roleBlock.classList.add("role-block", "flex-column");
+        const allEmployees = JSON.parse(sessionStorage.getItem('employeesTableDetail'));
+        let employeesData = allEmployees.filter((value) => value.roleId == (role.roleId));
         roleBlock.innerHTML = `
         <div class="role-heading flex">
             <div class="role-name">${role.role}</div>
@@ -34,7 +36,7 @@ export class Roles {
                     <img src="../../assets/admin-search.png" alt="">
                     <img src="../../assets/admin-search.png" alt="">
                     <img src="../../assets/admin-search.png" alt="">
-                    <p>${"4"}</p>
+                    <p>${employeesData.length}</p>
                 </div>
             </div>
         </div>`;
@@ -43,7 +45,7 @@ export class Roles {
         let viewBtn = document.createElement('button');
         viewBtn.textContent = "View all Employees";
         viewBtn.addEventListener('click', () => {
-            this.handleViewEmployee(roleId.split(' ').join('').toLowerCase());
+            this.handleViewEmployee(role.roleId.split(' ').join('').toLowerCase());
         });
         view.appendChild(viewBtn);
         const arrowIcon = document.createElement('i');
@@ -54,8 +56,8 @@ export class Roles {
     }
     populateRoles() {
         const roles = JSON.parse(sessionStorage.getItem('rolesDetail'));
-        Object.keys(roles).forEach(key => {
-            this.createRoleBlock(roles[key], key);
+        roles.forEach(role => {
+            this.createRoleBlock(role);
         });
     }
     unpoplateRoles() {
@@ -64,19 +66,22 @@ export class Roles {
     checkRoles() {
         let storage = new Storage();
         let employees = storage.employeesDetails('employeesTableDetail');
-        let roleMap = {};
+        let roles = [];
+        let roleMap = new Map();
         for (let i = 0; i < employees.length; i++) {
             let element = employees[i].roleId;
-            if (!(element in roleMap)) {
+            if (!roleMap.has(element)) {
                 let roleDetail = {
+                    roleId: employees[i].roleId,
                     role: employees[i].role,
                     location: employees[i].location,
                     dept: employees[i].dept
                 };
-                roleMap[element] = roleDetail;
+                roleMap.set(element, '');
+                roles.push(roleDetail);
             }
         }
-        sessionStorage.setItem('rolesDetail', JSON.stringify(roleMap));
+        sessionStorage.setItem('rolesDetail', JSON.stringify(roles));
     }
 }
 export class AddRoles {

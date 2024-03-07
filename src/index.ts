@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     uploadProfilePic.addEventListener('change', addEmp.displayImagePreview);
     document.querySelector('.delete-yes')?.addEventListener('click', populate.deleteRow);
     document.querySelector('.delete-no')?.addEventListener('click', populate.closeDeleteConfirmation);
-    document.querySelector('.edit-cancel-yes')?.addEventListener('click', ()=>{
+    document.querySelector('.edit-cancel-yes')?.addEventListener('click', () => {
         modal.closeAddEmployeeModal();
         addEmp.closeEditConfirmation();
     });
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.querySelector('th input')?.addEventListener('change', populate.selectAllRow);
     document.querySelector(".export-button")?.addEventListener('click', exportCsv.tableToCSV);
     document.querySelector('.delete-btn')?.addEventListener('click', populate.openDeleteConfirmation);
-    document.querySelector('.reset-btn')?.addEventListener('click',filter.resetFilter);
+    document.querySelector('.reset-btn')?.addEventListener('click', filter.resetFilter);
     const addEmployeeForm = document.getElementsByClassName('add-employee-form')[0];
     addEmployeeForm.addEventListener("submit", addEmp.checkValidation);
     let searchInput = document.querySelector(".search-input input") as HTMLInputElement;

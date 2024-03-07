@@ -38,8 +38,11 @@ export class Storage {
         let roles = new Roles();
         sessionStorage.setItem('FilteredRolesDetail', JSON.stringify(filteredRoles));
         const allRoles = JSON.parse(sessionStorage.getItem('FilteredRolesDetail') || '{}');
-        Object.keys(allRoles).forEach(key => {
-            roles.createRoleBlock(allRoles[key], key);
+        allRoles.forEach((role) => {
+            roles.createRoleBlock(role);
         });
+        // Object.keys(allRoles).forEach(key => {
+        //     roles.createRoleBlock(allRoles[key], key)
+        // })
     }
 }
