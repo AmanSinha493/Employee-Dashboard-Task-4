@@ -1,9 +1,8 @@
 
 import { AddRoles } from "./handleRoles.js";
-import { Collapse } from "./script.js";
+import { Collapse } from "./employeeTable.js";
 let addRole = new AddRoles();
 let collapse = new Collapse();
-
 document.addEventListener("DOMContentLoaded", function () {
     let employeeSelect=document.getElementsByClassName('select-selected')[0];
     employeeSelect.addEventListener( 'click', addRole.showEmployeeDropdown);

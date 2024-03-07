@@ -1,12 +1,12 @@
 import { Storage } from './handleStorage.js';
 import { AddEmployee } from './handleForms.js';
-import { EmployeeTable } from './script.js';
-let storage = new Storage();
-let addEmployee = new AddEmployee();
+import { EmployeeTable } from './employeeTable.js';
 export class Populate {
     constructor() {
+        this.addEmployee = new AddEmployee();
         this.employeeTable = new EmployeeTable();
         this.deleteRow = this.deleteRow.bind(this);
+        this.selectAllRow = this.selectAllRow.bind(this);
     }
     ;
     populateTable() {
@@ -19,6 +19,7 @@ export class Populate {
         else {
             console.log('No employee data available.');
         }
+        this.addEventsOnRows();
     }
     unpopulateTable() {
         document.querySelector('tbody').innerHTML = '';
@@ -36,98 +37,63 @@ export class Populate {
         document.querySelector('.delete-confirmation')?.classList.add('show-delete-confirmation');
     }
     addRow(employee) {
-        const employeeTableBody = document.getElementsByTagName('tbody')[0];
-        let tr = document.createElement('tr');
-        let checkbox = document.createElement('td');
-        checkbox.className = 'check-box-col';
-        let inputCheckbox = document.createElement('input');
-        inputCheckbox.type = 'checkbox';
-        inputCheckbox.classList.add('select');
-        inputCheckbox.addEventListener("click", this.employeeTable.activateDeleteButton);
-        checkbox.appendChild(inputCheckbox);
-        tr.appendChild(checkbox);
-        let listProfileName = document.createElement('div');
-        let listProfileMail = document.createElement('div');
-        listProfileName.className = 'list-profile-name';
-        listProfileMail.classList.add('list-profile-mail', 'grey-color');
-        listProfileName.textContent = employee.name;
-        listProfileMail.textContent = employee.email;
-        let listProfileDiv = document.createElement('div');
-        listProfileDiv.appendChild(listProfileName);
-        listProfileDiv.appendChild(listProfileMail);
-        let profileImage = document.createElement('img');
-        profileImage.src = employee.img;
-        profileImage.alt = "profile";
-        let listProfile = document.createElement('td');
-        listProfile.classList.add('list-profile', 'flex');
-        listProfile.appendChild(profileImage);
-        listProfile.appendChild(listProfileDiv);
-        listProfile.addEventListener("click", addEmployee.editEmployeeForm);
-        tr.appendChild(listProfile);
-        let location = document.createElement('td');
-        location.classList.add('col', 'col-location');
-        location.textContent = employee.location;
-        location.addEventListener("click", addEmployee.editEmployeeForm);
-        tr.appendChild(location);
-        let department = document.createElement('td');
-        department.classList.add('col', 'col-department');
-        department.textContent = employee.dept;
-        department.addEventListener("click", addEmployee.editEmployeeForm);
-        tr.appendChild(department);
-        let role = document.createElement('td');
-        role.classList.add('col-role', 'col');
-        role.textContent = employee.role;
-        role.addEventListener("click", addEmployee.editEmployeeForm);
-        tr.appendChild(role);
-        let empNum = document.createElement('td');
-        empNum.classList.add('col-emp-no', 'col');
-        empNum.textContent = employee.empNo;
-        empNum.addEventListener("click", addEmployee.editEmployeeForm);
-        tr.appendChild(empNum);
-        let activeBtn = document.createElement('div');
-        activeBtn.textContent = employee.status;
-        if (employee.status.toUpperCase() != 'ACTIVE') {
-            activeBtn.className = 'btn-inactive';
-        }
-        else {
-            activeBtn.className = 'btn-active';
-        }
-        activeBtn.addEventListener('click', this.employeeTable.toggleStatus);
-        let activeStatus = document.createElement('td');
-        activeStatus.classList.add('col-status', 'col');
-        activeStatus.appendChild(activeBtn);
-        tr.appendChild(activeStatus);
-        let joinDate = document.createElement('td');
-        joinDate.classList.add('col-join-dt', 'col');
-        joinDate.textContent = employee.joinDate;
-        joinDate.addEventListener("click", addEmployee.editEmployeeForm);
-        tr.appendChild(joinDate);
-        let dot = document.createElement('i');
-        dot.classList.add('fa-solid', 'fa-ellipsis');
-        let more = document.createElement('td');
-        more.classList.add('three-dots', 'col');
-        more.appendChild(dot);
-        var ellipsisParent = document.createElement('div');
-        ellipsisParent.classList.add('ellipsis-menu', 'hide-ellipsis-menu', 'flex-column');
-        var moreDetails = document.createElement('div');
-        var edit = document.createElement('div');
-        var dlt = document.createElement('div');
-        moreDetails.classList.add('child');
-        moreDetails.textContent = "More Details";
-        moreDetails.addEventListener('click', addEmployee.editEmployeeForm);
-        edit.classList.add('child');
-        edit.textContent = 'Edit';
-        edit.addEventListener('click', addEmployee.editEmployeeForm);
-        dlt.classList.add('child');
-        dlt.textContent = "delete";
-        dlt.addEventListener('click', this.ellipsisDelete);
-        ellipsisParent.appendChild(moreDetails);
-        ellipsisParent.appendChild(edit);
-        ellipsisParent.appendChild(dlt);
-        more.appendChild(ellipsisParent);
-        tr.appendChild(more);
-        more.addEventListener('click', this.employeeTable.toggleEditOption);
-        employeeTableBody.appendChild(tr);
+        const employeeTableBody = document.querySelector('tbody');
+        let tr = `
+            <tr>
+                <td class="check-box-col"><input type="checkbox" class="select"></td>
+                <td class="list-profile flex edit-col">
+                    <img src="${employee.img}" alt="profile">
+                    <div>
+                        <div class="list-profile-name">${employee.name}</div>
+                        <div class="list-profile-mail grey-color">${employee.email}</div>
+                    </div>
+                </td>
+                <td class="col col-location edit-col">${employee.location}</td>
+                <td class="col col-department edit-col">${employee.dept}</td>
+                <td class="col-role col edit-col">${employee.role}</td>
+                <td class="col-emp-no col edit-col">${employee.empNo}</td>
+                <td class="col-status col">
+                    <div class="">${employee.status}</div>
+                </td>
+                <td class="col-join-dt col edit-col">${employee.joinDate}</td>
+                <td class="three-dots col">
+                    <i class="fa-solid fa-ellipsis"></i>
+                    <div class="ellipsis-menu hide-ellipsis-menu flex-column">
+                        <div class="child details">More Details</div>
+                        <div class="child edit">Edit</div>
+                        <div class="child delete">Delete</div>
+                    </div>
+                </td>
+            </tr>`;
+        employeeTableBody.innerHTML += tr;
+    }
+    addEventsOnRows() {
+        const checkboxes = document.querySelectorAll('.select');
+        checkboxes.forEach((checkbox) => {
+            checkbox.addEventListener('click', this.employeeTable.activateDeleteButton);
+        });
+        const more = document.querySelectorAll(".three-dots .fa-ellipsis");
+        more.forEach((ellipsis) => {
+            ellipsis.addEventListener('click', this.employeeTable.toggleEditOption);
+        });
+        const edit = document.querySelectorAll(".child.edit, .child.details,.edit-col");
+        edit.forEach((row) => {
+            row.addEventListener('click', this.addEmployee.editEmployeeForm);
+        });
+        const deleteButtons = document.querySelectorAll('.child.delete');
+        deleteButtons.forEach((button) => {
+            button.addEventListener('click', this.ellipsisDelete);
+        });
+        const status = document.querySelectorAll(".col-status div");
+        status.forEach((elem) => {
+            elem.addEventListener('click', this.employeeTable.toggleStatus);
+            if (elem.textContent.toUpperCase() != 'ACTIVE') {
+                elem.className = 'btn-inactive';
+            }
+            else {
+                elem.className = 'btn-active';
+            }
+        });
     }
     selectAllRow() {
         var checkbox = document.querySelectorAll('.check-box-col input');
@@ -149,8 +115,10 @@ export class Populate {
         else {
             console.log('No employee data available.');
         }
+        this.addEventsOnRows();
     }
     deleteRow() {
+        let storage = new Storage();
         const table = document.querySelector("#employee-table");
         var rows = table.getElementsByTagName('tr');
         var checkbox = document.querySelectorAll('.check-box-col input');

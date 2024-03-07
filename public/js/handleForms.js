@@ -1,14 +1,10 @@
+import { Populate } from "./populate.js";
 import { Storage } from './handleStorage.js';
-let storage = new Storage();
-// let populate = new Populate();
-let populate;
-async function initiaize() {
-    let p = await import("./populate.js");
-    populate = new p.Populate();
-}
-initiaize();
+import { EmployeeTable } from './employeeTable.js';
 export class EmployeeModal {
-    constructor() { }
+    constructor() {
+        this.closeAddEmployeeModal = this.closeAddEmployeeModal.bind(this);
+    }
     ;
     openAddEmployeeModal() {
         var AddEmployeeModal = document.getElementsByClassName('add-employee-form')[0];
@@ -18,26 +14,39 @@ export class EmployeeModal {
         const form = document.getElementById("employeeForm");
         form.reset();
         [...form.querySelectorAll('input'), ...form.querySelectorAll('select')].forEach(element => {
-            showValidInput(element, "");
+            this.showValidInput(element, "");
             element.disabled = false;
         });
-        document.getElementById('profileImagePreview').src = "../../assets/add-employee-default-user.svg";
+        document.getElementById('empNo').readOnly = false;
+        document.getElementById('empNo').style.outline = "";
         let submitBtn = document.querySelector('#submitButton');
         submitBtn.style.display = "";
         submitBtn.textContent = "Add Employee";
         document.querySelector('#cancel').textContent = "Cancel";
+        document.querySelector('#cancel').className = "";
         document.getElementsByClassName('upload-profile-pic-btn')[0].style.display = '';
         document.getElementsByClassName('upload-profile-pic-btn')[0].disabled = false;
         document.getElementsByClassName('add-employee-form')[0].classList.remove('show-addEmployee-form');
-        if (location.href.includes("index.html")) {
-            populate.unpopulateTable();
-            populate.populateTable();
+        document.querySelector('.add-employee-form h1').textContent = "Add Employee";
+        if (!location.href.includes("index.html"))
+            document.getElementById('profileImagePreview').src = "../../assets/add-employee-default-user.svg";
+        else
+            document.getElementById('profileImagePreview').src = "./assets/add-employee-default-user.svg";
+    }
+    showValidInput(element, message) {
+        // element.style.outlineColor = "red";
+        let parentDiv = element.parentElement;
+        let span = parentDiv?.querySelector('span');
+        if (span) {
+            span.innerHTML = message;
+            span.style.color = "red";
         }
     }
 }
 export class AddEmployee {
     constructor() {
         this.modal = new EmployeeModal();
+        this.checkValidation = this.checkValidation.bind(this);
     }
     ;
     displayImagePreview(event) {
@@ -49,9 +58,10 @@ export class AddEmployee {
         }
     }
     checkValidation(event) {
+        let populate = new Populate();
         event.preventDefault();
         const editflag = document.querySelector('#submitButton').textContent.toLowerCase().split(' ').join('') !== "addemployee";
-        const employees = storage.employeesDetails('employeesTableDetail'); // replace any with the actual type
+        const employees = JSON.parse(sessionStorage.getItem('employeesTableDetail'));
         const form = document.getElementById("employeeForm");
         const formInput = form.querySelectorAll('input:not([name="dob"])');
         const formSelect = form.querySelectorAll('select');
@@ -61,73 +71,78 @@ export class AddEmployee {
                 case 'empNo':
                     if (!editflag) {
                         if (element.value === "") {
-                            showValidInput(element, `&#9888; This is a required field`);
+                            this.modal.showValidInput(element, `&#9888; This is a required field`);
                             flag = false;
                         }
                         else if (employees.some(emp => emp.empNo === element.value)) {
-                            showValidInput(element, `&#9888; Employee ID already exists!`);
+                            this.modal.showValidInput(element, `&#9888; Employee ID already exists!`);
                             flag = false;
                         }
                         else {
-                            showValidInput(element, ``);
+                            this.modal.showValidInput(element, ``);
                         }
                     }
                     break;
                 case 'mobileNumber':
                     if (element.value === "") {
-                        showValidInput(element, `&#9888; This is a required field`);
+                        this.modal.showValidInput(element, `&#9888; This is a required field`);
                         flag = false;
                     }
-                    else if (element.value.toString().length !== 10) {
-                        showValidInput(element, `&#9888; Enter a valid number`);
+                    else if (!/^[1-9][0-9]{9}$/.test(element.value)) {
+                        this.modal.showValidInput(element, `&#9888; Enter a valid number`);
                         flag = false;
                     }
                     else {
-                        showValidInput(element, ``);
+                        this.modal.showValidInput(element, ``);
                     }
                     break;
                 case 'firstName':
                 case 'lastName':
                     if (element.value === "") {
-                        showValidInput(element, `&#9888; This is a required field`);
+                        this.modal.showValidInput(element, `&#9888; This is a required field`);
                         flag = false;
                     }
                     else if (!/^[A-Za-z]+$/.test(element.value)) {
-                        showValidInput(element, `&#9888; Only alphabets are allowed`);
+                        this.modal.showValidInput(element, `&#9888; Only alphabets are allowed`);
                         flag = false;
                     }
                     else {
-                        showValidInput(element, ``);
+                        this.modal.showValidInput(element, ``);
                     }
                     break;
                 case 'email':
                     if (element.value === "") {
-                        showValidInput(element, `&#9888; This is a required field`);
+                        this.modal.showValidInput(element, `&#9888; This is a required field`);
                         flag = false;
                     }
                     else if (!/^[a-zA-Z0-9._]+@[a-zA-Z0-9.]+\.[a-zA-Z]{2,}$/.test(element.value)) {
-                        showValidInput(element, `&#9888; Invalid Email Address`);
+                        this.modal.showValidInput(element, `&#9888; Invalid Email Address`);
                         flag = false;
                     }
                     else {
-                        showValidInput(element, ``);
+                        this.modal.showValidInput(element, ``);
                     }
                     break;
                 case 'joiningDate':
                     const currentDate = new Date();
-                    const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-                    const currentDateFormatted = `${currentDate.getFullYear()}${currentMonth}${currentDate.getDate()}`;
-                    const inputDate = element.value.split('-').join('');
+                    const currentYear = currentDate.getFullYear();
+                    const currentDay = currentDate.getDate().toString().padStart(2, '0');
+                    const inputDateParts = element.value.split('-');
                     if (element.value === "") {
-                        showValidInput(element, `&#9888; This is a required field`);
-                        flag = false;
-                    }
-                    else if (parseInt(inputDate) > parseInt(currentDateFormatted)) {
-                        showValidInput(element, `&#9888; Invalid date`);
+                        this.modal.showValidInput(element, `&#9888; This is a required field`);
                         flag = false;
                     }
                     else {
-                        showValidInput(element, ``);
+                        const inputYear = parseInt(inputDateParts[0]);
+                        const inputMonth = parseInt(inputDateParts[1]);
+                        const inputDay = parseInt(inputDateParts[2]);
+                        if (inputYear > currentYear || (inputYear === currentYear && inputMonth > currentDate.getMonth() + 1) || (inputYear === currentYear && inputMonth === currentDate.getMonth() + 1 && inputDay > currentDay)) {
+                            this.modal.showValidInput(element, `&#9888; Invalid date`);
+                            flag = false;
+                        }
+                        else {
+                            this.modal.showValidInput(element, ``);
+                        }
                     }
                     break;
                 default:
@@ -136,29 +151,32 @@ export class AddEmployee {
         }
         for (const element of formSelect) {
             if (element.value === '') {
-                showValidInput(element, `&#9888; This is a required field`);
+                this.modal.showValidInput(element, `&#9888; This is a required field`);
                 flag = false;
             }
             else {
-                showValidInput(element, ``);
+                this.modal.showValidInput(element, ``);
             }
         }
         if (!flag)
             return;
         if (editflag) {
-            updateEmployee(document.getElementById('empNo').value);
+            this.updateEmployee(document.getElementById('empNo').value, event);
         }
         else {
-            handleFormSubmit();
+            this.handleFormSubmit(event);
         }
         if (location.href.includes("index.html")) {
-            populate.unpopulateTable();
-            populate.populateTable();
+            setTimeout(function () {
+                populate.unpopulateTable();
+                populate.populateTable();
+            }, 200);
         }
     }
     editEmployeeForm() {
         document.querySelector('.add-employee-form').classList.add('show-addEmployee-form');
-        const employees = storage.employeesDetails('employeesTableDetail');
+        document.querySelector('.add-employee-form h1').textContent = "Edit Employee";
+        const employees = JSON.parse(sessionStorage.getItem('employeesTableDetail'));
         let employee;
         if (this.textContent.toLowerCase() == 'view') {
             let currentRow = this.parentNode.querySelector('.employee-info-container>:first-child').textContent.trim();
@@ -174,7 +192,8 @@ export class AddEmployee {
         const nameParts = employee.name.split(' ');
         const selectedEmpJoinDate = employee.joinDate.split('/').reverse().join('-');
         document.getElementById('empNo').value = employee.empNo;
-        document.getElementById('empNo').disabled = true;
+        document.getElementById('empNo').readOnly = true;
+        document.getElementById('empNo').style.outline = "none";
         document.getElementById('firstName').value = nameParts[0];
         document.getElementById('lastName').value = nameParts.slice(1).join(' ');
         document.getElementById('email').value = employee.email;
@@ -187,96 +206,111 @@ export class AddEmployee {
         const submitButton = document.querySelector('#submitButton');
         if (this.textContent.toLowerCase() != "edit") {
             submitButton.style.display = "none";
+            document.querySelector('#cancel').classList.add('view');
             document.querySelector('#cancel').textContent = "Close";
             const inputs = document.querySelectorAll('#employeeForm input, #employeeForm select');
             inputs.forEach(input => input.disabled = true);
             document.querySelector('.upload-profile-pic-btn').style.display = 'none';
+            document.querySelector('.add-employee-form h1').textContent = "Employee Detail";
         }
         else {
+            document.querySelector('#cancel').classList.add('edit');
             submitButton.textContent = "Apply Changes";
         }
     }
-}
-function showValidInput(element, message) {
-    element.style.outlineColor = "red";
-    let parentDiv = element.parentElement;
-    let span = parentDiv?.querySelector('span');
-    if (span) {
-        span.innerHTML = message;
-        span.style.color = "red";
+    populateRoleOptions() {
+        let roles = JSON.parse(sessionStorage.getItem('rolesDetail'));
+        Object.keys(roles).forEach(key => {
+            let option = document.createElement("option");
+            option.text = roles[key].role;
+            option.value = roles[key].role;
+            document.getElementById('jobTitle').appendChild(option);
+        });
     }
-}
-let modal = new EmployeeModal();
-function handleFormSubmit() {
-    const form = document.querySelector("#employeeForm");
-    const formData = new FormData(form);
-    const empNo = formData.get("empNo");
-    const firstName = formData.get("firstName");
-    const lastName = formData.get("lastName");
-    const email = formData.get("email");
-    const joiningDate = formData.get("joiningDate").split('-').reverse().join('/');
-    const location = formData.get("location");
-    const mobile = formData.get("mobileNumber");
-    const jobTitle = formData.get("jobTitle");
-    const department = formData.get("department");
-    const profileImageFile = (formData.get("profileImage") || undefined);
-    const name = `${firstName} ${lastName}`;
-    let newEmployeeDetails = {
-        "dept": department,
-        "email": email,
-        "empNo": empNo,
-        "img": "",
-        "joinDate": joiningDate,
-        "location": location,
-        "mobile": mobile,
-        "name": name,
-        "role": jobTitle,
-        "status": "Active"
-    };
-    if (profileImageFile) {
-        const reader = new FileReader();
-        reader.readAsDataURL(profileImageFile);
-        reader.onload = function () {
-            newEmployeeDetails.img = reader.result;
+    assignRoleId(roleName) {
+        const roles = JSON.parse(sessionStorage.getItem('rolesDetail'));
+        let roleId = "";
+        roles.forEach((r) => {
+            if (roleName === r.role) {
+                roleId = r.roleId;
+            }
+        });
+        if (roleId == "")
+            roleId = `R00${Object.keys(roles).length + 1}`;
+        return roleId;
+    }
+    handleFormSubmit(event) {
+        let storage = new Storage();
+        let empTable = new EmployeeTable();
+        const form = document.querySelector("#employeeForm");
+        const formData = new FormData(form);
+        const { empNo, firstName, lastName, email, joiningDate, location, jobTitle, department, mobileNumber } = Object.fromEntries(formData);
+        const profileImageFile = (formData.get("profileImage") || undefined);
+        const name = `${firstName} ${lastName}`;
+        let newEmployeeDetails = {
+            "dept": department,
+            "email": email,
+            "empNo": empNo,
+            "img": "",
+            "joinDate": joiningDate.split('-').reverse().join('/'),
+            "location": location,
+            "mobile": mobileNumber,
+            "roleId": this.assignRoleId(jobTitle),
+            "name": name,
+            "role": jobTitle,
+            "status": "Active"
+        };
+        if (profileImageFile) {
+            const reader = new FileReader();
+            reader.readAsDataURL(profileImageFile);
+            reader.onload = function () {
+                newEmployeeDetails.img = reader.result;
+                storage.saveToSessionStorage(newEmployeeDetails);
+            };
+        }
+        else {
             storage.saveToSessionStorage(newEmployeeDetails);
-        };
+        }
+        form.reset();
+        this.modal.closeAddEmployeeModal();
+        empTable.showToaster("Employee Added");
     }
-    else {
-        storage.saveToSessionStorage(newEmployeeDetails);
+    updateEmployee(id, event) {
+        let empTable = new EmployeeTable();
+        const employees = JSON.parse(sessionStorage.getItem('employeesTableDetail'));
+        const employee = employees.find(emp => emp.empNo == id);
+        if (!employee)
+            return;
+        const form = document.getElementById("employeeForm");
+        const formData = new FormData(form);
+        const { firstName, lastName, email, joiningDate, location, jobTitle, department, mobileNumber } = Object.fromEntries(formData);
+        let checkChanges = empTable.checkForChanges(event);
+        employee.email = email;
+        employee.location = location;
+        employee.role = jobTitle;
+        employee.dept = department;
+        employee.name = `${firstName} ${lastName}`;
+        employee.mobile = mobileNumber;
+        employee.roleId = this.assignRoleId(jobTitle);
+        employee.joinDate = joiningDate.split('-').reverse().join('/');
+        const profileImageFile = formData.get("profileImage");
+        if (profileImageFile.name !== '') {
+            const reader = new FileReader();
+            reader.readAsDataURL(profileImageFile);
+            reader.onload = function () {
+                employee.img = reader.result;
+                sessionStorage.setItem('employeesTableDetail', JSON.stringify(employees));
+            };
+        }
+        sessionStorage.setItem('employeesTableDetail', JSON.stringify(employees));
+        this.modal.closeAddEmployeeModal();
+        if (checkChanges)
+            empTable.showToaster("Employee Updated");
     }
-    form.reset();
-    alert("Employee data has been stored !");
-    modal.closeAddEmployeeModal();
-}
-function updateEmployee(id) {
-    const employees = storage.employeesDetails('employeesTableDetail');
-    const employee = employees.find(emp => emp.empNo == id);
-    if (!employee)
-        return;
-    const form = document.getElementById("employeeForm");
-    const formData = new FormData(form);
-    const firstName = formData.get("firstName");
-    const lastName = formData.get("lastName");
-    const email = formData.get("email");
-    const joiningDate = formData.get("joiningDate");
-    const location = formData.get("location");
-    const jobTitle = formData.get("jobTitle");
-    const department = formData.get("department");
-    employee.email = email;
-    employee.location = location;
-    employee.role = jobTitle;
-    employee.dept = department;
-    employee.name = `${firstName} ${lastName}`;
-    employee.joinDate = joiningDate.split('-').reverse().join('/');
-    const profileImageFile = formData.get("profileImage");
-    if (profileImageFile.name !== '') {
-        const reader = new FileReader();
-        reader.readAsDataURL(profileImageFile);
-        reader.onload = function () {
-            employee.img = reader.result;
-            sessionStorage.setItem('employeesTableDetail', JSON.stringify(employees));
-        };
+    openEditConfirmation() {
+        document.getElementsByClassName('edit-cancel-popup')[0].classList.add('show-delete-confirmation');
     }
-    sessionStorage.setItem('employeesTableDetail', JSON.stringify(employees));
-    modal.closeAddEmployeeModal();
+    closeEditConfirmation() {
+        document.getElementsByClassName('edit-cancel-popup')[0].classList.remove('show-delete-confirmation');
+    }
 }

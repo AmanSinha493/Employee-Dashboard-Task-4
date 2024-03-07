@@ -1,30 +1,25 @@
-import { EmployeeData } from "./employee";
+import { EmployeeData } from "./dataType";
 import { AddEmployee } from "./handleForms.js";
-import { Collapse } from "./script.js";
+import { Collapse } from "./employeeTable.js";
 import { EmployeeModal } from "./handleForms.js";
-
+import { Role } from "./dataType";
 let addEmp= new AddEmployee();
 let collapse=new Collapse();
 let modal=new EmployeeModal();
 
-type roleData = [string,
-    {
-        employees: EmployeeData[],
-        roleId: string
-    }
-];
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelector('.collapse-button')?.addEventListener( 'click',collapse.sideBar);
     let url = document.URL;
-    let roleName = url.split('?')[1];
-    const allRoles:roleData[] =  JSON.parse(sessionStorage.getItem('rolesDetail') || 'null')
+    let roleId = url.split('-')[2];
+    const allEmployees:EmployeeData[] =  JSON.parse(sessionStorage.getItem('employeesTableDetail')!);
     let employeesData:EmployeeData[] = []
-    for (let i = 0; i < allRoles!.length; i++) {
-        if (allRoles[i][0].split(' ').join('').toLowerCase() == roleName) {
-            employeesData = allRoles[i][1].employees;
-            break;
-        }
-    }
+    const roles:Role = JSON.parse(sessionStorage.getItem('rolesDetail')!);
+        Object.keys(roles).forEach(key=>{
+            if (key.split(' ').join('').toLowerCase() == roleId) {
+                        employeesData = allEmployees.filter((value)=> value.roleId==(key));
+                        console.log(roles[key]);
+                    }
+        })
     populateEmployeesBlock(employeesData);
     let view = document.getElementsByClassName('view-btn');
     for (let i = 0; i < view.length; i++) {
@@ -54,7 +49,6 @@ function createEmployeeBlock(employee:EmployeeData) {
                             <div class="employee-name">${employee.name}</div>
                             <div class="employee-department grey-color">Head of Product Design</div>
                         </div>
-
                     </div>
                     <div class="employee-info-container flex-column">
                         <div class="employee-info flex">
@@ -75,7 +69,5 @@ function createEmployeeBlock(employee:EmployeeData) {
                         </div>
                     </div>
                     <div class="view-btn flex">View<i class="fa-solid fa-arrow-right-long"></i></div>`;
-    // console.log(document.getElementsByClassName('view-btn')[0]);
-
     employeeBlockContainer.appendChild(employeeBlock);
 }

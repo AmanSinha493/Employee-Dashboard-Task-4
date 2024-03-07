@@ -1,5 +1,5 @@
 import { AddEmployee } from "./handleForms.js";
-import { Collapse } from "./script.js";
+import { Collapse } from "./employeeTable.js";
 import { EmployeeModal } from "./handleForms.js";
 let addEmp = new AddEmployee();
 let collapse = new Collapse();
@@ -7,15 +7,15 @@ let modal = new EmployeeModal();
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelector('.collapse-button')?.addEventListener('click', collapse.sideBar);
     let url = document.URL;
-    let roleName = url.split('?')[1];
-    const allRoles = JSON.parse(sessionStorage.getItem('rolesDetail') || 'null');
+    let roleId = url.split('?')[1].split('-')[1];
+    const allEmployees = JSON.parse(sessionStorage.getItem('employeesTableDetail'));
     let employeesData = [];
-    for (let i = 0; i < allRoles.length; i++) {
-        if (allRoles[i][0].split(' ').join('').toLowerCase() == roleName) {
-            employeesData = allRoles[i][1].employees;
-            break;
+    const roles = JSON.parse(sessionStorage.getItem('rolesDetail'));
+    roles.forEach(role => {
+        if (role.roleId.split(' ').join('').toLowerCase() == roleId) {
+            employeesData = allEmployees.filter((value) => value.roleId == (role.roleId));
         }
-    }
+    });
     populateEmployeesBlock(employeesData);
     let view = document.getElementsByClassName('view-btn');
     for (let i = 0; i < view.length; i++) {
@@ -44,7 +44,6 @@ function createEmployeeBlock(employee) {
                             <div class="employee-name">${employee.name}</div>
                             <div class="employee-department grey-color">Head of Product Design</div>
                         </div>
-
                     </div>
                     <div class="employee-info-container flex-column">
                         <div class="employee-info flex">
@@ -65,6 +64,5 @@ function createEmployeeBlock(employee) {
                         </div>
                     </div>
                     <div class="view-btn flex">View<i class="fa-solid fa-arrow-right-long"></i></div>`;
-    // console.log(document.getElementsByClassName('view-btn')[0]);
     employeeBlockContainer.appendChild(employeeBlock);
 }

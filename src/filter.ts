@@ -1,103 +1,64 @@
 
-import { EmployeeData } from './employee.js';
 import { Populate } from './populate.js';
 import { Storage } from './handleStorage.js';
-import { EmployeeTable } from './script.js';
-let employeeTable =new EmployeeTable();
+import { EmployeeTable } from './employeeTable.js';
+import { Roles } from './handleRoles.js';
+import { Role } from './dataType.js';
+import { RoleDetail } from './dataType.js';
+let employeeTable = new EmployeeTable();
 let populate = new Populate();
 let storage = new Storage()
+let role = new Roles();
+let locationInputs = document.getElementById(`location-filter`)!.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
+let statusInputs = document.getElementById(`status-filter`)?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
+let departmentInputs = document.getElementById(`department-filter`)!.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
+let filterIcon = document.getElementById('filter-icon') as HTMLImageElement;
+let allAlphabets = (document.querySelector('.a-to-z-filter') as HTMLElement)?.querySelectorAll('div:not(:first-child)') as NodeListOf<HTMLElement>;
+let rows = storage.employeesDetails('employeesTableDetail')!;
 
-class seperateFilters{
-    applyAlphabeticFilter(event: HTMLElement): void {
-        let alphabetFilterParent = document.querySelector('.a-to-z-filter') as HTMLElement;
-        let allAlphabets = alphabetFilterParent.querySelectorAll('div:not(:first-child)') as NodeListOf<HTMLElement>;
-        let filterIcon = document.getElementById('filter-icon') as HTMLImageElement;
-        let filteredEmployees = [];
-        if (event.classList.contains('selected')) {
+class checkFilters {
+
+    applyFilter(event: HTMLElement) {
+        let selectedFilters: string[], filterParameters: string[] = [];
+        selectedFilters = Array.from(locationInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join('')!);
+        selectedFilters.length == 0 ? filterParameters.push('location') : filterParameters.push(...selectedFilters);
+        selectedFilters = Array.from(statusInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join('')!);
+        selectedFilters.length == 0 ? filterParameters.push('status') : filterParameters.push(...selectedFilters);
+        selectedFilters = Array.from(departmentInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join('')!);
+        selectedFilters.length == 0 ? filterParameters.push('department') : filterParameters.push(...selectedFilters);
+        if (event.classList.contains('selected') && !event.classList.contains('apply-btn')) {
             allAlphabets.forEach(x => x.classList.remove('selected'));
             filterIcon.classList.remove('selected');
-            storage.resetFilterStorage();
-            populate.populateTable();
-            return;
         }
-        let input = event.textContent;
-        let rows: EmployeeData[] = storage.employeesDetails('employeesTableDetail')!;
-        let profileName;
-        for (let i = 0; i < rows.length; i++) {
-            profileName = rows[i].name.trim().toUpperCase();
-    
-            if (profileName[0].toUpperCase() == input) {
-                filteredEmployees.push(rows[i]);
-            }
+        else if (!event.classList.contains('apply-btn')) {
+            allAlphabets.forEach(x => x.classList.remove('selected'));
+            event.classList.add('selected');
+            filterIcon.classList.add('selected');
         }
-        allAlphabets.forEach(x => x.classList.remove('selected'));
-        event.classList.add('selected');
-        filterIcon.classList.add('selected');
-        populate.populateFilteredTable(filteredEmployees);
-    }
-    
-    toggleFilter(filterId: string): void {
-        const filter = document.querySelector(`#${filterId}-filter .${filterId}-dropdown`) as HTMLElement;
-        filter.classList.toggle('hide');
-    }
-    
-}
-
-let  seperateFiltersObj=new seperateFilters();
-
-
-export class Filter {
-    constructor() { };
-
-    setAlphabeticFilter(): void {
-        const alphabetFilterParent = document.querySelector('.a-to-z-filter') as HTMLElement;
-        const alphabets = alphabetFilterParent.querySelectorAll('div:not(:first-child)') as NodeListOf<HTMLElement>;
-        alphabets.forEach((child: HTMLElement): void => {
-            child.addEventListener('click', function(this: HTMLElement): void {
-                seperateFiltersObj.applyAlphabeticFilter(this);
-            });
-        });
-    }
-    
-    displayStatusFilter(): void {
-        seperateFiltersObj.toggleFilter('status');
-    }
-
-    displayLocationFilter(): void {
-        seperateFiltersObj.toggleFilter('location');
-    }
-
-    displayDepartmentFilter(): void {
-        seperateFiltersObj.toggleFilter('department');
-    }
-
-    applyFilter():void {
+        const selectedAlphabet = Array.from(allAlphabets).filter(elem => elem.classList.contains('selected'));
+        let letter = (selectedAlphabet.length != 0) ? selectedAlphabet[0].textContent! : '';
         let filteredEmployees = [];
-        let status, location, department;
-        let rows = storage.employeesDetails('employeesTableDetail')!;
-        for (var i = 1; i < rows.length; i++) {
-            status = checkStatusFilter(rows[i].status);
-            location = checkLocationFilter(rows[i].location);
-            department = checkDepartmentFilter(rows[i].dept);
-            if (status && location && department) {
+        let status, location, department, alphabet;
+        for (var i = 0; i < rows.length; i++) {
+            alphabet = letter == '' ? true : rows[i].name.trim().toUpperCase()[0] === letter;
+            status = filterParameters.includes(rows[i].status.trim().toLowerCase()) || filterParameters.includes('status');
+            department = filterParameters.includes(rows[i].dept.trim().toLowerCase().split(' ').join('')) || filterParameters.includes('department');
+            location = filterParameters.includes(rows[i].location.trim().toLowerCase()) || filterParameters.includes('location');
+            if (status && location && department && alphabet) {
                 filteredEmployees.push(rows[i]);
             }
         }
         populate.populateFilteredTable(filteredEmployees);
     }
-    resetFilter():void {
-        var status = document.querySelector("#status-filter .status-dropdown")! as HTMLElement;
-        var department = document.querySelector("#department-filter .department-dropdown")! as HTMLElement;
-        var location = document.querySelector("#location-filter .location-dropdown")! as HTMLElement;
-        let alphabetFilterParent = document.querySelector('.a-to-z-filter') as HTMLElement;
-        let allAlphabets = alphabetFilterParent.querySelectorAll('div:not(:first-child)') as NodeListOf<HTMLElement>;
+}
+let checkFilter = new checkFilters();
+export class Filter {
+    resetFilter(): void {
+        (document.querySelector("#status-filter .status-dropdown")! as HTMLElement).classList.add('hide');
+        (document.querySelector("#department-filter .department-dropdown")! as HTMLElement).classList.add('hide');
+        (document.querySelector("#location-filter .location-dropdown")! as HTMLElement).classList.add('hide');
+        let allAlphabets = (document.querySelector('.a-to-z-filter') as HTMLElement).querySelectorAll('div:not(:first-child)') as NodeListOf<HTMLElement>;
         let filterIcon = document.getElementById('filter-icon') as HTMLImageElement;
-        if (!status.classList.contains('hide'))
-            status.classList.add('hide');
-        if (!department.classList.contains('hide'))
-            department.classList.add('hide');
-        if (!location.classList.contains('hide'))
-            location.classList.add('hide');
         let input = document.querySelectorAll('.filter-options-container input') as NodeListOf<HTMLInputElement>;
         input.forEach((element) => { element.checked = false });
         populate.unpopulateTable()
@@ -106,49 +67,62 @@ export class Filter {
         allAlphabets.forEach(x => x.classList.remove('selected'));
         filterIcon.classList.remove('selected');
         employeeTable.checkdisableFilterButton();
-        
     }
     selectFilter(this: any, event: any): void {
         let currentElement: HTMLElement = this;
         let checkbox = currentElement.querySelector('input') as HTMLInputElement;
         const element = event.target;
-        if (element == checkbox)
-            return;
-        if (checkbox.checked)
-            checkbox.checked = false;
-        else
-            checkbox.checked = true;
+        if (element == checkbox) return;
+        checkbox.checked = !checkbox.checked;
+    }
+    displayFilterDropdown() {
+        let filters = [...document.querySelectorAll('.filter>:first-child') as NodeListOf<HTMLElement>];
+        filters.forEach((child: HTMLElement): void => {
+            child.addEventListener('click', function (this: HTMLElement): void {
+                document.querySelector(`#${this.parentElement!.id.split('-')[0]}-filter .${this.parentElement!.id.split('-')[0]}-dropdown`)!.classList.toggle('hide');
+            });
+        });
+    }
+    applyEmployeesFilter() {
+        const alphabets = (document.querySelector('.a-to-z-filter') as HTMLElement).querySelectorAll('div:not(:first-child)') as NodeListOf<HTMLElement>;
+        let nodes: HTMLElement[] = [...alphabets]
+        nodes.push(document.querySelector('.apply-btn')!)
+        nodes.forEach((child: HTMLElement): void => {
+            child.addEventListener('click', function (this: HTMLElement): void {
+                checkFilter.applyFilter(this);
+            });
+        });
     }
 }
 
-function checkFilter(employee: string, filterType: string):boolean {
-    const filterElement = document.getElementById(`${filterType}-filter`)!;
-    const filterInputs = filterElement.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
-    const selectedFilters: string[] = [];
-
-    filterInputs.forEach(input => {
-        if (input.checked) {
-            const filterText = input.parentElement?.textContent?.toLowerCase().split(' ').join('')!;
-            selectedFilters.push(filterText);
-        }
-    });
-
-    if (selectedFilters.length === 0) {
-        return true;
+export class RoleFilter {
+    applyRoleFilter(): void {
+        let selectedFilters: string[], filterParameters: string[] = [];
+        selectedFilters = Array.from(locationInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join('')!);
+        selectedFilters.length == 0 ? filterParameters.push('location') : filterParameters.push(...selectedFilters);
+        selectedFilters = Array.from(departmentInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join('')!);
+        selectedFilters.length == 0 ? filterParameters.push('department') : filterParameters.push(...selectedFilters);
+        const roles:Role = JSON.parse(sessionStorage.getItem('rolesDetail')!);
+        let location, department;
+        let filteredRoles: Role = {};
+        Object.keys(roles).forEach(key=>{
+            let currentRole:RoleDetail=roles[key];
+            department = filterParameters.includes(currentRole.dept.trim().toLowerCase().split(' ').join('')) || filterParameters.includes('department');
+            location = filterParameters.includes(currentRole.location.trim().toLowerCase()) || filterParameters.includes('location');
+            if (location && department) {
+                filteredRoles[key]=currentRole;
+            }
+        })
+        role.unpoplateRoles();
+        storage.populateFilteredRoles(filteredRoles);
     }
-
-    const employeeFilter = employee.toLowerCase().split(' ').join('');
-    return selectedFilters.includes(employeeFilter);
-}
-
-function checkStatusFilter(employee: string) {
-    return checkFilter(employee, 'status');
-}
-
-function checkLocationFilter(employee: string) {
-    return checkFilter(employee, 'location');
-}
-
-function checkDepartmentFilter(employee: string) {
-    return checkFilter(employee, 'department');
+    applyRoleReset(): void {
+        let input = document.querySelectorAll('.filter-options-container input') as NodeListOf<HTMLInputElement>;
+        input.forEach((element) => { element.checked = false });
+        (document.querySelector("#department-filter .department-dropdown")! as HTMLElement).classList.add('hide');
+        (document.querySelector("#location-filter .location-dropdown")! as HTMLElement).classList.add('hide');
+        role.unpoplateRoles();
+        role.populateRoles();
+        employeeTable.checkdisableFilterButton();
+    }
 }

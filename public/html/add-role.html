@@ -35,24 +35,15 @@
                 <div class="dasboard grid side-bar-options">
                     <div class="lock-icon"><img src="../../assets/Horizontal nav/Dashboard.svg" alt="lock-icon"></div>
                     <div class="text grey-color">Dasboard</div>
-                    <!-- <div class="selected-mark"></div> -->
-                    <!-- <div class="arrow flex"><i class="fa-solid fa-angle-right"></i></div> -->
                 </div>
-                <!-- <div class="roles grid">
-                    <div class="lock-icon"><img../../assets/bx-lock.png" alt="lock-icon"></div>
-                    <div class="text grey-color">Roles</div>
-                    <div class="arrow flex"><i class="fa-solid fa-angle-right"></i></div>
-                </div> -->
                 <div class="employees flex-column">
-                    <a href="./index.html">
+                    <a href="../../index.html">
                         <div class="employees-bar side-bar-options grid">
                             <div class="lock-icon"><img src="../../assets/team_svgrepo.com.svg" alt="lock-icon"></div>
                             <div class="text">Employees</div>
                         </div>
                     </a>
                 </div>
-
-                
                 <div class="light-grey function-name">Roles/ User Management</div>
                 <a href="./Roles.html">
                     <div class="user-management__roles grid side-bar-options selected">
@@ -64,13 +55,10 @@
                 </a>
 
                 <div class="user-management__assign grid side-bar-options">
-                    <!-- <div class="lock-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M4 22a8 8 0 1 1 16 0h-2a6 6 0 0 0-12 0zm8-9c-3.315 0-6-2.685-6-6s2.685-6 6-6s6 2.685 6 6s-2.685 6-6 6m0-2c2.21 0 4-1.79 4-4s-1.79-4-4-4s-4 1.79-4 4s1.79 4 4 4"/></svg></div> -->
                     <div class="lock-icon assign-roles-img"><img src="../../assets/Horizontal nav/assign user.svg"
                             alt="lock-icon"></div>
                     <div class="text grey-color assign-roles">Assign User Roles</div>
                     <div class="arrow flex"><i class="fa-solid fa-angle-right light grey"></i></div>
-                    <!-- <div class="employee-selected-mark"></div> -->
-                    <!-- </div> -->
                 </div>
             </div>
 
@@ -148,13 +136,15 @@
                                 <div class="input-field-container">
                                     <label for="department">Department</label>
                                     <select id="department" name="department" required>
-                                        <option value="">Search</option>
-                                        <option value="UI/UX">UX Designer</option>
+                                        <option value="" hidden>Search</option>
+                                        <option value="QA">QA</option>
+                                        <option value="Product Engg">Product Engg</option>
+                                        <!-- <option value="UI/UX">UX Designer</option>
                                         <option value="Human Resources">Human Resources</option>
                                         <option value="Sales">Sales</option>
                                         <option value="IT">IT</option>
                                         <option value="Management">Management</option>
-                                        <option value="Finance">Finance</option>
+                                        <option value="Finance">Finance</option> -->
                                     </select>
                                 </div>
                             </div>
@@ -167,7 +157,7 @@
                             <div class="input-field-container">
                                 <label for="location">Location</label>
                                 <select id="location" name="location" required>
-                                    <option value="">Search</option>
+                                    <option value="" hidden>Search</option>
                                     <option value="Hyderabad">Hyderabad</option>
                                     <option value="Bangalore">Bangalore</option>
                                     <option value="Mumbai">Mumbai</option>

@@ -1,90 +1,59 @@
 import { Populate } from './populate.js';
 import { Storage } from './handleStorage.js';
-import { EmployeeTable } from './script.js';
+import { EmployeeTable } from './employeeTable.js';
+import { Roles } from './handleRoles.js';
 let employeeTable = new EmployeeTable();
 let populate = new Populate();
 let storage = new Storage();
-class seperateFilters {
-    applyAlphabeticFilter(event) {
-        let alphabetFilterParent = document.querySelector('.a-to-z-filter');
-        let allAlphabets = alphabetFilterParent.querySelectorAll('div:not(:first-child)');
-        let filterIcon = document.getElementById('filter-icon');
-        let filteredEmployees = [];
-        if (event.classList.contains('selected')) {
+let role = new Roles();
+let locationInputs = document.getElementById(`location-filter`).querySelectorAll("input");
+let statusInputs = document.getElementById(`status-filter`)?.querySelectorAll("input");
+let departmentInputs = document.getElementById(`department-filter`).querySelectorAll("input");
+let filterIcon = document.getElementById('filter-icon');
+let allAlphabets = document.querySelector('.a-to-z-filter')?.querySelectorAll('div:not(:first-child)');
+let rows = storage.employeesDetails('employeesTableDetail');
+class checkFilters {
+    applyFilter(event) {
+        let selectedFilters, filterParameters = [];
+        selectedFilters = Array.from(locationInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join(''));
+        selectedFilters.length == 0 ? filterParameters.push('location') : filterParameters.push(...selectedFilters);
+        selectedFilters = Array.from(statusInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join(''));
+        selectedFilters.length == 0 ? filterParameters.push('status') : filterParameters.push(...selectedFilters);
+        selectedFilters = Array.from(departmentInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join(''));
+        selectedFilters.length == 0 ? filterParameters.push('department') : filterParameters.push(...selectedFilters);
+        if (event.classList.contains('selected') && !event.classList.contains('apply-btn')) {
             allAlphabets.forEach(x => x.classList.remove('selected'));
             filterIcon.classList.remove('selected');
-            storage.resetFilterStorage();
-            populate.populateTable();
-            return;
         }
-        let input = event.textContent;
-        let rows = storage.employeesDetails('employeesTableDetail');
-        let profileName;
-        for (let i = 0; i < rows.length; i++) {
-            profileName = rows[i].name.trim().toUpperCase();
-            if (profileName[0].toUpperCase() == input) {
+        else if (!event.classList.contains('apply-btn')) {
+            allAlphabets.forEach(x => x.classList.remove('selected'));
+            event.classList.add('selected');
+            filterIcon.classList.add('selected');
+        }
+        const selectedAlphabet = Array.from(allAlphabets).filter(elem => elem.classList.contains('selected'));
+        let letter = (selectedAlphabet.length != 0) ? selectedAlphabet[0].textContent : '';
+        let filteredEmployees = [];
+        let status, location, department, alphabet;
+        for (var i = 0; i < rows.length; i++) {
+            alphabet = letter == '' ? true : rows[i].name.trim().toUpperCase()[0] === letter;
+            status = filterParameters.includes(rows[i].status.trim().toLowerCase()) || filterParameters.includes('status');
+            department = filterParameters.includes(rows[i].dept.trim().toLowerCase().split(' ').join('')) || filterParameters.includes('department');
+            location = filterParameters.includes(rows[i].location.trim().toLowerCase()) || filterParameters.includes('location');
+            if (status && location && department && alphabet) {
                 filteredEmployees.push(rows[i]);
             }
         }
-        allAlphabets.forEach(x => x.classList.remove('selected'));
-        event.classList.add('selected');
-        filterIcon.classList.add('selected');
         populate.populateFilteredTable(filteredEmployees);
-    }
-    toggleFilter(filterId) {
-        const filter = document.querySelector(`#${filterId}-filter .${filterId}-dropdown`);
-        filter.classList.toggle('hide');
     }
 }
-let seperateFiltersObj = new seperateFilters();
+let checkFilter = new checkFilters();
 export class Filter {
-    constructor() { }
-    ;
-    setAlphabeticFilter() {
-        const alphabetFilterParent = document.querySelector('.a-to-z-filter');
-        const alphabets = alphabetFilterParent.querySelectorAll('div:not(:first-child)');
-        alphabets.forEach((child) => {
-            child.addEventListener('click', function () {
-                seperateFiltersObj.applyAlphabeticFilter(this);
-            });
-        });
-    }
-    displayStatusFilter() {
-        seperateFiltersObj.toggleFilter('status');
-    }
-    displayLocationFilter() {
-        seperateFiltersObj.toggleFilter('location');
-    }
-    displayDepartmentFilter() {
-        seperateFiltersObj.toggleFilter('department');
-    }
-    applyFilter() {
-        let filteredEmployees = [];
-        let status, location, department;
-        let rows = storage.employeesDetails('employeesTableDetail');
-        for (var i = 1; i < rows.length; i++) {
-            status = checkStatusFilter(rows[i].status);
-            location = checkLocationFilter(rows[i].location);
-            department = checkDepartmentFilter(rows[i].dept);
-            if (status && location && department) {
-                filteredEmployees.push(rows[i]);
-            }
-        }
-        populate.populateFilteredTable(filteredEmployees);
-    }
     resetFilter() {
-        var status = document.querySelector("#status-filter .status-dropdown");
-        var department = document.querySelector("#department-filter .department-dropdown");
-        var location = document.querySelector("#location-filter .location-dropdown");
-        let alphabetFilterParent = document.querySelector('.a-to-z-filter');
-        let allAlphabets = alphabetFilterParent.querySelectorAll('div:not(:first-child)');
+        document.querySelector("#status-filter .status-dropdown").classList.add('hide');
+        document.querySelector("#department-filter .department-dropdown").classList.add('hide');
+        document.querySelector("#location-filter .location-dropdown").classList.add('hide');
+        let allAlphabets = document.querySelector('.a-to-z-filter').querySelectorAll('div:not(:first-child)');
         let filterIcon = document.getElementById('filter-icon');
-        if (!status.classList.contains('hide'))
-            status.classList.add('hide');
-        if (!department.classList.contains('hide'))
-            department.classList.add('hide');
-        if (!location.classList.contains('hide'))
-            location.classList.add('hide');
         let input = document.querySelectorAll('.filter-options-container input');
         input.forEach((element) => { element.checked = false; });
         populate.unpopulateTable();
@@ -100,34 +69,54 @@ export class Filter {
         const element = event.target;
         if (element == checkbox)
             return;
-        if (checkbox.checked)
-            checkbox.checked = false;
-        else
-            checkbox.checked = true;
+        checkbox.checked = !checkbox.checked;
+    }
+    displayFilterDropdown() {
+        let filters = [...document.querySelectorAll('.filter>:first-child')];
+        filters.forEach((child) => {
+            child.addEventListener('click', function () {
+                document.querySelector(`#${this.parentElement.id.split('-')[0]}-filter .${this.parentElement.id.split('-')[0]}-dropdown`).classList.toggle('hide');
+            });
+        });
+    }
+    applyEmployeesFilter() {
+        const alphabets = document.querySelector('.a-to-z-filter').querySelectorAll('div:not(:first-child)');
+        let nodes = [...alphabets];
+        nodes.push(document.querySelector('.apply-btn'));
+        nodes.forEach((child) => {
+            child.addEventListener('click', function () {
+                checkFilter.applyFilter(this);
+            });
+        });
     }
 }
-function checkFilter(employee, filterType) {
-    const filterElement = document.getElementById(`${filterType}-filter`);
-    const filterInputs = filterElement.querySelectorAll("input");
-    const selectedFilters = [];
-    filterInputs.forEach(input => {
-        if (input.checked) {
-            const filterText = input.parentElement?.textContent?.toLowerCase().split(' ').join('');
-            selectedFilters.push(filterText);
-        }
-    });
-    if (selectedFilters.length === 0) {
-        return true;
+export class RoleFilter {
+    applyRoleFilter() {
+        let selectedFilters, filterParameters = [];
+        selectedFilters = Array.from(locationInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join(''));
+        selectedFilters.length == 0 ? filterParameters.push('location') : filterParameters.push(...selectedFilters);
+        selectedFilters = Array.from(departmentInputs).filter(input => input.checked).map(input => input.parentElement?.textContent?.toLowerCase().split(' ').join(''));
+        selectedFilters.length == 0 ? filterParameters.push('department') : filterParameters.push(...selectedFilters);
+        const roles = JSON.parse(sessionStorage.getItem('rolesDetail'));
+        let location, department;
+        let filteredRoles = [];
+        roles.forEach((role) => {
+            department = filterParameters.includes(role.dept.trim().toLowerCase().split(' ').join('')) || filterParameters.includes('department');
+            location = filterParameters.includes(role.location.trim().toLowerCase()) || filterParameters.includes('location');
+            if (location && department) {
+                filteredRoles.push(role);
+            }
+        });
+        role.unpoplateRoles();
+        storage.populateFilteredRoles(filteredRoles);
     }
-    const employeeFilter = employee.toLowerCase().split(' ').join('');
-    return selectedFilters.includes(employeeFilter);
-}
-function checkStatusFilter(employee) {
-    return checkFilter(employee, 'status');
-}
-function checkLocationFilter(employee) {
-    return checkFilter(employee, 'location');
-}
-function checkDepartmentFilter(employee) {
-    return checkFilter(employee, 'department');
+    applyRoleReset() {
+        let input = document.querySelectorAll('.filter-options-container input');
+        input.forEach((element) => { element.checked = false; });
+        document.querySelector("#department-filter .department-dropdown").classList.add('hide');
+        document.querySelector("#location-filter .location-dropdown").classList.add('hide');
+        role.unpoplateRoles();
+        role.populateRoles();
+        employeeTable.checkdisableFilterButton();
+    }
 }

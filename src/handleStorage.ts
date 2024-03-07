@@ -1,11 +1,11 @@
-import { EmployeeData } from './employee.js';
-
+import { EmployeeData } from './dataType.js';
+import { Roles } from './handleRoles.js';
+import { Role } from './dataType.js';
 
 export class Storage {
     constructor() { };
     saveToSessionStorage(employee: EmployeeData) {
         let savedEmployees: EmployeeData[] = JSON.parse(sessionStorage.getItem("employeesTableDetail") || 'null')
-        console.log(savedEmployees);
         if (savedEmployees == null) {
             savedEmployees = [];
             savedEmployees.push(employee);
@@ -15,13 +15,13 @@ export class Storage {
         }
         sessionStorage.setItem("employeesTableDetail", JSON.stringify(savedEmployees));
     }
-    employeesDetails(key: string): EmployeeData[] | null  {
-        const employees: EmployeeData[] | null = JSON.parse(sessionStorage.getItem(key) || 'null');
+    employeesDetails(key: string): EmployeeData[] | null {
+        const employees: EmployeeData[] | null = JSON.parse(sessionStorage.getItem(key) || '{}');
         return employees;
     }
 
     getFilteredEmployees() {
-        const employees: EmployeeData[] | null = JSON.parse(sessionStorage.getItem('FilteredEmployeesDetail') || 'null');
+        const employees: EmployeeData[] | null = JSON.parse(sessionStorage.getItem('FilteredEmployeesDetail') || '{}');
         return employees;
     }
 
@@ -39,6 +39,12 @@ export class Storage {
         savedEmployees = savedEmployees.filter((savedEmployee) => savedEmployee.empNo != selectedEmployee);
         sessionStorage.setItem("employeesTableDetail", JSON.stringify(savedEmployees));
     }
-
-    
+    populateFilteredRoles(filteredRoles: Role) {
+        let roles = new Roles();
+        sessionStorage.setItem('FilteredRolesDetail', JSON.stringify(filteredRoles));
+        const allRoles = JSON.parse(sessionStorage.getItem('FilteredRolesDetail') || '{}')
+        Object.keys(allRoles).forEach(key=>{
+            roles.createRoleBlock(allRoles[key],key)
+        })
+    }
 }
