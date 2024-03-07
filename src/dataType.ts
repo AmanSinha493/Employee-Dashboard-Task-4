@@ -20,8 +20,3 @@ export type Role =
         dept: string
     };
 
-// export type Role = {
-//     [key: string]: RoleDetail
-// }
-
-

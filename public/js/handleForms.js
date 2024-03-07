@@ -19,7 +19,6 @@ export class EmployeeModal {
         });
         document.getElementById('empNo').readOnly = false;
         document.getElementById('empNo').style.outline = "";
-        document.getElementById('profileImagePreview').src = "./assets/add-employee-default-user.svg";
         let submitBtn = document.querySelector('#submitButton');
         submitBtn.style.display = "";
         submitBtn.textContent = "Add Employee";
@@ -29,6 +28,10 @@ export class EmployeeModal {
         document.getElementsByClassName('upload-profile-pic-btn')[0].disabled = false;
         document.getElementsByClassName('add-employee-form')[0].classList.remove('show-addEmployee-form');
         document.querySelector('.add-employee-form h1').textContent = "Add Employee";
+        if (!location.href.includes("index.html"))
+            document.getElementById('profileImagePreview').src = "../../assets/add-employee-default-user.svg";
+        else
+            document.getElementById('profileImagePreview').src = "./assets/add-employee-default-user.svg";
     }
     showValidInput(element, message) {
         // element.style.outlineColor = "red";
@@ -227,10 +230,6 @@ export class AddEmployee {
     assignRoleId(roleName) {
         const roles = JSON.parse(sessionStorage.getItem('rolesDetail'));
         let roleId = "";
-        // Object.keys(roles).forEach(key => {
-        //     if (roleName == roles[key].role)
-        //         roleId = key;
-        // })
         roles.forEach((r) => {
             if (roleName === r.role) {
                 roleId = r.roleId;

@@ -47,8 +47,5 @@ export class Storage {
             roles.createRoleBlock(role)
 
         })
-        // Object.keys(allRoles).forEach(key => {
-        //     roles.createRoleBlock(allRoles[key], key)
-        // })
     }
 }

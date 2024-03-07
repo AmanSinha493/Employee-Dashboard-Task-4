@@ -21,7 +21,6 @@ export class EmployeeModal {
         });
         (document.getElementById('empNo') as HTMLInputElement).readOnly = false;
         (document.getElementById('empNo')! as HTMLInputElement).style.outline = "";
-        (document.getElementById('profileImagePreview')! as HTMLImageElement).src = "./assets/add-employee-default-user.svg";
         let submitBtn = (document.querySelector('#submitButton')! as HTMLButtonElement);
         submitBtn.style.display = "";
         submitBtn.textContent = "Add Employee";
@@ -31,6 +30,11 @@ export class EmployeeModal {
         (document.getElementsByClassName('upload-profile-pic-btn')[0]! as HTMLButtonElement).disabled = false;
         document.getElementsByClassName('add-employee-form')[0].classList.remove('show-addEmployee-form');
         document.querySelector('.add-employee-form h1')!.textContent = "Add Employee";
+        if (!location.href.includes("index.html"))
+            (document.getElementById('profileImagePreview')! as HTMLImageElement).src = "../../assets/add-employee-default-user.svg";
+
+        else
+            (document.getElementById('profileImagePreview')! as HTMLImageElement).src = "./assets/add-employee-default-user.svg";
     }
     showValidInput(element: HTMLElement, message: string): void {
         // element.style.outlineColor = "red";
@@ -218,12 +222,8 @@ export class AddEmployee {
     assignRoleId(roleName: string): string {
         const roles: Role[] = JSON.parse(sessionStorage.getItem('rolesDetail')!);
         let roleId = "";
-        // Object.keys(roles).forEach(key => {
-        //     if (roleName == roles[key].role)
-        //         roleId = key;
-        // })
         roles.forEach((r: Role) => {
-            if (roleName === r.role){
+            if (roleName === r.role) {
                 roleId = r.roleId
             }
         })

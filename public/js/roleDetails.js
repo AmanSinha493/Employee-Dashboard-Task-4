@@ -16,11 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
             employeesData = allEmployees.filter((value) => value.roleId == (role.roleId));
         }
     });
-    // Object.keys(roles).forEach(key => {
-    //     if (key.split(' ').join('').toLowerCase() == roleId) {
-    //         employeesData = allEmployees.filter((value) => value.roleId == (key));
-    //     }
-    // })
     populateEmployeesBlock(employeesData);
     let view = document.getElementsByClassName('view-btn');
     for (let i = 0; i < view.length; i++) {

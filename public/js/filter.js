@@ -2,7 +2,6 @@ import { Populate } from './populate.js';
 import { Storage } from './handleStorage.js';
 import { EmployeeTable } from './employeeTable.js';
 import { Roles } from './handleRoles.js';
-// import { RoleDetail } from './dataType.js';
 let employeeTable = new EmployeeTable();
 let populate = new Populate();
 let storage = new Storage();
@@ -101,14 +100,6 @@ export class RoleFilter {
         const roles = JSON.parse(sessionStorage.getItem('rolesDetail'));
         let location, department;
         let filteredRoles = [];
-        // Object.keys(roles).forEach(key => {
-        //     let currentRole: RoleDetail = roles[key];
-        //     department = filterParameters.includes(currentRole.dept.trim().toLowerCase().split(' ').join('')) || filterParameters.includes('department');
-        //     location = filterParameters.includes(currentRole.location.trim().toLowerCase()) || filterParameters.includes('location');
-        //     if (location && department) {
-        //         filteredRoles[key] = currentRole;
-        //     }
-        // })
         roles.forEach((role) => {
             department = filterParameters.includes(role.dept.trim().toLowerCase().split(' ').join('')) || filterParameters.includes('department');
             location = filterParameters.includes(role.location.trim().toLowerCase()) || filterParameters.includes('location');
