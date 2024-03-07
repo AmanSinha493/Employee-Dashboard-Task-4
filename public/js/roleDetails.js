@@ -7,7 +7,7 @@ let modal = new EmployeeModal();
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelector('.collapse-button')?.addEventListener('click', collapse.sideBar);
     let url = document.URL;
-    let roleId = url.split('-')[2];
+    let roleId = url.split('?')[1].split('-')[1];
     const allEmployees = JSON.parse(sessionStorage.getItem('employeesTableDetail'));
     let employeesData = [];
     const roles = JSON.parse(sessionStorage.getItem('rolesDetail'));
